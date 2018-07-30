@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <style type="text/css">
+
       html {
         background-size: cover;
         box-sizing: border-box;
@@ -61,62 +62,66 @@
   </head>
   <body>
     <main>
+
       <h1> Text Area Examples</h1>
-      <p>Example showing barebones text area example.</p>
+      <p>Example showing barebones text area examples.</p>
 
       <form novalidate>
 
         <h3>Character Counter</h3>
         
-        <p role="text">The following shows how to validate textarea fields with the <code>area-invalid</code> attribute.</p>
+        <p role="text">The following shows how to count and limit the characters.</p>
+        
+        <span class="visually-hidden">start of text area with limited characters and character counter example</span>
         
         <label>Description:</label>
+
+        <textarea id="character-limit"></textarea>
         
-        <span class="visually-hidden">start of text area with limited characters example</span>
-        
-        <textarea id="character-limit" aria-required="true" aria-invalid="true"></textarea>
-        
-        <span class="visually-hidden">end of text area with limited characters example</span>
+        <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
         
         <p id="remaining">Characters remaining: 10</p>
 
+        <h3>Required</h3>
+        
+        <p role="text">The following shows how to make text area fields required with the <code>aria-required</code> attribute.</p>
+        
+        <span class="visually-hidden">start of aria required text area example</span>
+        
+        <label><span aria-hidden="true">*</span>Description:</label>
+
+        <textarea area-required="true"></textarea>
+        
+        <span class="visually-hidden">end of aria required text area example</span>
+
         <h3>Disabled</h3>
         
-        <p role="text">The following shows how to disable textarea fields with the <code>disabled</code> attribute.</p>
+        <p role="text">The following shows how to disable text area fields with the <code>disabled</code> attribute.</p>
         
         <p role="text">NOTE: <code>disabled</code> textarea are not focusable.</p>
         
-        <span class="visually-hidden">start of disabled text area input example</span>
+        <span class="visually-hidden">start of disabled text area example</span>
         
-        <textarea area-required="false" aria-invalid="false" disabled></textarea>
-        
-        <span class="visually-hidden">end of disabled text area input example</span>
-      
-<!--         <h3>Required</h3>
-        
-        <p role="text">The following shows how to disable textarea fields with the <code>disabled</code> attribute.</p>
-        
-        <p role="text">NOTE: <code>disabled</code> textarea are not focusable.</p>
-        
-        <span class="visually-hidden">start of disabled text area input example</span>
-        
-        <textarea area-required="false" aria-invalid="false" disabled></textarea>
-        
-        <span class="visually-hidden">end of disabled text area input example</span> -->
+        <label>Description:</label>
 
-<!--         <h3>Invalid</h3>
+        <textarea disabled></textarea>
         
-        <p role="text">The following shows how to disable textarea fields with the <code>disabled</code> attribute.</p>
+        <span class="visually-hidden">end of disabled text area example</span>
+
+        <h3>Invalid</h3>
         
-        <p role="text">NOTE: <code>disabled</code> textarea are not focusable.</p>
+        <p role="text">The following shows how to designate invalid textarea fields with the <code>aria-invalid</code> attribute.</p>
         
-        <span class="visually-hidden">start of disabled text area input example</span>
+        <span class="visually-hidden">start of invalid text area example</span>
         
-        <textarea area-required="false" aria-invalid="false" disabled></textarea>
+        <label>Description:</label>
+
+        <textarea aria-invalid="true"></textarea>
         
-        <span class="visually-hidden">end of disabled text area input example</span> -->
+        <span class="visually-hidden">end of invalid text area example</span>
 
       </form>
+
     </main>
 
     <script type="text/javascript">
@@ -124,8 +129,8 @@
       //Character Count
       var characterLimit = function(event) {
         var remaining = document.querySelector('#remaining')
-        //Removes spaces and line breaks to count accurate number of characters
-        var characters = event.target.value.replace(/ /g,"").replace(/\r?\n|\r/g, "")
+        //Removes spaces and line breaks to count characters accurately
+        var characters = event.target.value.replace(/ |\r?\n|\r/g, "")
         if (characters.length > 9) {
           alert("You've exceeded character limit of 10!")
         }
