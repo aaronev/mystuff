@@ -22,11 +22,11 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
       }
 
-      input {
+      textarea {
         border: 1px solid currentColor;
       }
 
-      input:focus {
+      textarea:focus {
         border: 1px solid #fff;
         box-shadow: 0 0 0 2px #fff;
         outline: 4px dotted #6da003;
@@ -36,7 +36,7 @@
         opacity: .5;
       }
 
-      ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+      ::-webkit-textarea-placeholder { /* Chrome/Opera/Safari */
         color: #757575;
       }
 
@@ -44,13 +44,37 @@
         color: #757575;
       }
 
-      :-ms-input-placeholder { /* IE 10+ */
+      :-ms-textarea-placeholder { /* IE 10+ */
         color: #757575;
       }
-
 
     </style>
   </head>
   <body>
+    <h1> Text Area Examples</h1>
+    
+    <h3>1. Character Count</h3>
+    <label>Description:</label>
+    <span class="visually-hidden">start of text area with characters counts example</span>
+    <textarea id="character-count" aria-required="true"></textarea>
+    <span class="visually-hidden">end of text area with character counts example </span>
+    <p>You typed 0 characters</p>
+
+    <h3>2. Limited Characters</h3>
+    <p role="text">The following shows how to validate textarea fields with the <code>area-invalid</code> attribute.</p>
+    <p role="text">NOTE: <code>disabled</code> textarea are not focusable.</p>
+    <label>Description:</label>
+    <span class="visually-hidden">start of text area with limited characters example</span>
+    <textarea id="character-count" aria-required="true" aria-invalid="true"></textarea>
+    <span class="visually-hidden">end of text area with limited characters example</span>
+    <p id="remaining">Characters remaining: 10</p>
+
+    <h3>3. Disabled</h3>
+    <p role="text">The following shows how to disable textarea fields with the <code>disabled</code> attribute.</p>
+    <p role="text">NOTE: <code>disabled</code> textarea are not focusable.</p>
+    <span class="visually-hidden">start of disabled text area input example</span>
+    <textarea area-required="false" aria-invalid="false" disabled></textarea>
+    <span class="visually-hidden">end of disabled text area input example</span>
+
   </body>
 </html>
