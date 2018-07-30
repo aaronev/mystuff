@@ -126,18 +126,35 @@
 
     <script type="text/javascript">
 
+      // make it accessible
+      // then make it announce characters remaining
+      // when we get to 10 announce ten characters
+      // visually the text is red // must be accessible for color-blind folks
+      // special announcements
+      // role="text" //the best thing is you just leave html symatics a lone
+      // <p> is already a role of text
+      // voice over has this weird bug  when it comes to <code></code> breaks up sentence for multiple pieces
+      // spaces and line breaks need to be 
+
       //Character Count
       var characterLimit = function(event) {
         var remaining = document.querySelector('#remaining')
         //Removes spaces and line breaks to count characters accurately
-        var characters = event.target.value.replace(/ |\r?\n|\r/g, "")
-        if (characters.length > 9) {
+        var characters = event.target.value //.replace(/ |\r?\n|\r/g, "")
+        if (characters.length > 299) {
           alert("You've exceeded character limit of 10!")
         }
-        remaining.textContent = "Characters remaining: " + (10-characters.length)
+        remaining.textContent = "Characters remaining: " + (300-characters.length)
+        //increments of 50 so 250, 150..., 25, 10, then console.log(hit the limits)
+        //special to announce to hidden text two separate things for sighted users and non sighted users
+        //some people might get offended so sighted/nonsighted is safe way to
+        //ablism there is a whole term
+        //make sure we provide the same info for both sighted and nonsighted user
       }
 
       document.querySelector('#character-limit').addEventListener('click', characterLimit)
+
+      //use keyup instea since keydown had problems
       document.querySelector('#character-limit').addEventListener('keyup', characterLimit)
 
     </script>
