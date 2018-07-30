@@ -86,7 +86,7 @@
       }
       
       document.querySelector('#character-count').addEventListener('click', characterCount)
-      document.querySelector('#character-count').addEventListener('keydown', characterCount)
+      document.querySelector('#character-count').addEventListener('keyup', characterCount)
 
       var characterLimit = function(event) {
         var remaining = document.querySelector('#remaining')
@@ -98,7 +98,7 @@
       }
 
       document.querySelector('#character-limit').addEventListener('click', characterLimit)
-      document.querySelector('#character-limit').addEventListener('keydown', characterLimit)
+      document.querySelector('#character-limit').addEventListener('keyup', characterLimit)
 
     </script>
   </body>
