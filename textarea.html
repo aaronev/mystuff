@@ -58,14 +58,14 @@
     <span class="visually-hidden">start of text area with characters counts example</span>
     <textarea id="character-count" aria-required="true"></textarea>
     <span class="visually-hidden">end of text area with character counts example </span>
-    <p>You typed 0 characters</p>
+    <p id="count">You typed 0 characters</p>
 
     <h3>2. Limited Characters</h3>
     <p role="text">The following shows how to validate textarea fields with the <code>area-invalid</code> attribute.</p>
     <p role="text">NOTE: <code>disabled</code> textarea are not focusable.</p>
     <label>Description:</label>
     <span class="visually-hidden">start of text area with limited characters example</span>
-    <textarea id="character-count" aria-required="true" aria-invalid="true"></textarea>
+    <textarea id="character-limit" aria-required="true" aria-invalid="true"></textarea>
     <span class="visually-hidden">end of text area with limited characters example</span>
     <p id="remaining">Characters remaining: 10</p>
 
@@ -75,6 +75,31 @@
     <span class="visually-hidden">start of disabled text area input example</span>
     <textarea area-required="false" aria-invalid="false" disabled></textarea>
     <span class="visually-hidden">end of disabled text area input example</span>
+    
+    <script type="text/javascript">
 
+      //1. Character Count
+      var characterCount = function(event) {
+        var count = document.querySelector('#count')
+        var characters = event.target.value.replace(/ /g,"").replace(/\r?\n|\r/g, "")
+        count.textContent = "you typed " + characters.length + " characters!"
+      }
+      
+      document.querySelector('#character-count').addEventListener('click', characterCount)
+      document.querySelector('#character-count').addEventListener('keydown', characterCount)
+
+      var characterLimit = function(event) {
+        var remaining = document.querySelector('#remaining')
+        var characters = event.target.value.replace(/ /g,"").replace(/\r?\n|\r/g, "")
+        if (characters.length > 9) {
+          alert("You've exceeded character limit of 300!")
+        }
+        remaining.textContent = "Characters remaining: " + (10-characters.length)
+      }
+
+      document.querySelector('#character-limit').addEventListener('click', characterLimit)
+      document.querySelector('#character-limit').addEventListener('keydown', characterLimit)
+
+    </script>
   </body>
 </html>
