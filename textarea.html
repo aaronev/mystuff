@@ -140,7 +140,7 @@
       var characterLimit = function(event) {
         var remaining = document.querySelector('#remaining')
         //Removes spaces and line breaks to count characters accurately
-        var characters = event.target.value //.replace(/ |\r?\n|\r/g, "")
+        var characters = event.target.value 
         if (characters.length > 299) {
           alert("You've exceeded character limit of 10!")
         }
@@ -154,7 +154,7 @@
 
       document.querySelector('#character-limit').addEventListener('click', characterLimit)
 
-      //use keyup instea since keydown had problems
+      //use keyup instead since keydown had problems
       document.querySelector('#character-limit').addEventListener('keyup', characterLimit)
 
     </script>
