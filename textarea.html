@@ -138,18 +138,43 @@
 
       //Character Counter
       var characterLimit = function(event) {
-        var remaining = document.querySelector('#remaining')
-        //Removes spaces and line breaks to count characters accurately
-        var characters = event.target.value 
-        if (characters.length > 299) {
-          alert("You've exceeded character limit of 10!")
+        var remainingOutput = document.querySelector('#remaining')
+        var characters = event.target.value
+        var max = 300
+        var count = characters.length
+        var diff = max - count
+        var rem = null
+
+
+        switch(diff){
+          case diff % 50 === 0:
+            rem = diff
+            break;
+          case diff === 25:
+            rem = diff
+            break;
+          case diff === 10:
+            rem = diff
+            break;
+          case diff < 1:
+            console.log("You've exceeded maximum amount of characters")
+            break;
+          default:
         }
-        remaining.textContent = "Characters remaining: " + (300-characters.length)
+
+        console.log(rem)
+
+        if (rem) {
+          remaining.textContent = "Characters remaining: " + (rem)
+        }
+
+
         //increments of 50 so 250, 150..., 25, 10, then console.log(hit the limits)
         //special to announce to hidden text two separate things for sighted users and non sighted users
         //some people might get offended so sighted/nonsighted is safe way to
         //ablism there is a whole term
         //make sure we provide the same info for both sighted and nonsighted user
+
       }
 
       document.querySelector('#character-limit').addEventListener('click', characterLimit)
