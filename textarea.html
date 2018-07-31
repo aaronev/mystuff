@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie-edge">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
     <title>Text Area Examples</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <style type="text/css">
+    <style>
 
       html {
         background-size: cover;
@@ -80,7 +80,7 @@
         
         <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
         
-        <p id="remaining">Characters remaining: 10</p>
+        <p id="remaining">Characters remaining: 300</p>
 
         <h3>Required</h3>
         
@@ -90,7 +90,7 @@
         
         <label><span aria-hidden="true">*</span>Description:</label>
 
-        <textarea area-required="true"></textarea>
+        <textarea aria-required="true"></textarea>
         
         <span class="visually-hidden">end of aria required text area example</span>
 
@@ -124,7 +124,7 @@
 
     </main>
 
-    <script type="text/javascript">
+    <script>
 
       // make it accessible
       // then make it announce characters remaining
@@ -136,7 +136,7 @@
       // voice over has this weird bug  when it comes to <code></code> breaks up sentence for multiple pieces
       // spaces and line breaks need to be 
 
-      //Character Count
+      //Character Counter
       var characterLimit = function(event) {
         var remaining = document.querySelector('#remaining')
         //Removes spaces and line breaks to count characters accurately
@@ -153,8 +153,6 @@
       }
 
       document.querySelector('#character-limit').addEventListener('click', characterLimit)
-
-      //use keyup instead since keydown had problems
       document.querySelector('#character-limit').addEventListener('keyup', characterLimit)
 
     </script>
