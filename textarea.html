@@ -76,11 +76,11 @@
         
         <label>Description:</label>
 
-        <textarea id="character-limit"></textarea>
+        <textarea id="character-limit" aria-describedby="remaining"></textarea>
 
-        <span id="special-announcements" class="visually-hidden"></span>
+        <span id="special-announcements" class="visually-hidden" aria-live="assertive"></span>
         
-        <p role="text" id="remaining">Characters remaining: </p>
+        <p role="text" id="remaining">Characters remaining 300</p>
 
         <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
 
@@ -128,12 +128,10 @@
  
     <script>
 
-      //maybe have a function that changes the attribute and style of the text area?
-
+      //Annouces remaining characters for screen readers to r
       var specialAnnouncement = function(remainingCharacters) {
-        console.log('announced');
         var announce = document.querySelector('#special-announcements');
-        announce.innerText = 'Characters remaing ' + remainingCharacters;
+        announce.innerText = 'Characters remaining ' + remainingCharacters;
         setTimeout(function() {
           announce.innerText = '';
         }, 1000 );
@@ -145,20 +143,17 @@
         var target = event.target
         var characters = event.target.value;
         var count = characters.length;
-        var max = 303;
+        var max = 300;
         var diff = max - count;
 
-        target.style.borderColor = '';
+        target.style.color = '';
         target.setAttribute('aria-invalid', false);
-        target.style.borderWidth = '';
 
-        // Condition for screen readers to announce
-        // not sure if needed condition if diff === max?
-        if ( (diff === max) || (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
+        // screen readers will announce if conditions are met
+        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
           specialAnnouncement(diff)
-        } else if (diff < 1) {
-          target.style.borderColor = 'red';
-          target.style.borderWidth = '4px';
+        } else if (diff < 0) {
+          target.style.color = 'red';
           target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
