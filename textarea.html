@@ -123,7 +123,7 @@
       </form>
 
     </main>
-
+ 
     <script>
 
       // make it accessible
@@ -136,23 +136,33 @@
       // voice over has this weird bug  when it comes to <code></code> breaks up sentence for multiple pieces
       // spaces and line breaks need to be 
 
+      //must have a function that changes the attribute and style of the text area
+
+      var specialAnnouncement = function() {
+        console.log('announced')
+        //create logic at allow the special announcemnts to annouc
+
+      };
+
       //Character Counter
       var characterMaxCount = function(event) {
-        var remaining = document.querySelector('#remaining')
-        var characters = event.target.value
-        var count = characters.length
-        var max = 300
-        var diff = max - count
+        var remaining = document.querySelector('#remaining');
+        var target = event.target
+        var characters = event.target.value;
+        var count = characters.length;
+        var max = 303;
+        var diff = max - count;
+
+        target.setAttribute('aria-invalid', false)
 
         // Condition for screen readers to announce
-        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-          remaining.textContent = "Characters remaining: " + (diff)
+        if ( (diff === max) || (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
+          specialAnnouncement()
         } else if (diff < 1) {
-          //make textarea red 
-          event.target.style.borderColor = "red"
           //colorblind folks make it visible that it needs attention not just depend on color
-
-          console.log("You've exceeded maximum amount of "+max+" characters!")
+          event.target.style.borderColor = "red";
+          target.setAttribute('aria-invalid', true);
+          console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
 
         //special to announce to hidden text two separate things for sighted users and non sighted users
@@ -160,10 +170,12 @@
         //ablism there is a whole term
         //make sure we provide the same info for both sighted and nonsighted user
 
+        remaining.textContent = "Characters remaining: " + (diff);
+
       }
 
-      document.querySelector('#character-limit').addEventListener('click', characterMaxCount)
-      document.querySelector('#character-limit').addEventListener('keypress', characterMaxCount)
+      document.querySelector('#character-limit').addEventListener('click', characterMaxCount);
+      document.querySelector('#character-limit').addEventListener('keypress', characterMaxCount);
 
     </script>
   </body>
