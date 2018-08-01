@@ -77,6 +77,8 @@
         <label>Description:</label>
 
         <textarea id="character-limit"></textarea>
+
+        <span id="special-announcements" class="visually-hidden"></span>
         
         <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
         
@@ -126,22 +128,15 @@
  
     <script>
 
-      // make it accessible
-      // then make it announce characters remaining
-      // when we get to 10 announce ten characters
-      // visually the text is red // must be accessible for color-blind folks
-      // special announcements
-      // role="text" //the best thing is you just leave html symatics a lone
-      // <p> is already a role of text
-      // voice over has this weird bug  when it comes to <code></code> breaks up sentence for multiple pieces
-      // spaces and line breaks need to be 
+      //maybe have a function that changes the attribute and style of the text area
 
-      //must have a function that changes the attribute and style of the text area
-
-      var specialAnnouncement = function() {
+      var specialAnnouncement = function(remainingCharacters) {
         console.log('announced')
-        //create logic at allow the special announcemnts to annouc
-
+        var announce = document.querySelector('#special-announcements')
+        announce.innerText = 'Characters remaing: ' + remainingCharacters
+        setTimeout(function() {
+          announce.innerText = ''
+        })
       };
 
       //Character Counter
@@ -153,24 +148,19 @@
         var max = 303;
         var diff = max - count;
 
-        target.setAttribute('aria-invalid', false)
+        event.target.style.borderColor = '';
+        target.setAttribute('aria-invalid', false);
 
         // Condition for screen readers to announce
         if ( (diff === max) || (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-          specialAnnouncement()
+          specialAnnouncement(diff)
         } else if (diff < 1) {
-          //colorblind folks make it visible that it needs attention not just depend on color
-          event.target.style.borderColor = "red";
+          event.target.style.borderColor = 'red';
           target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
 
-        //special to announce to hidden text two separate things for sighted users and non sighted users
-        //some people might get offended so sighted/nonsighted is safe way to
-        //ablism there is a whole term
-        //make sure we provide the same info for both sighted and nonsighted user
-
-        remaining.textContent = "Characters remaining: " + (diff);
+        remaining.textContent = 'Characters remaining: ' + (diff);
 
       }
 
