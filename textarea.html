@@ -80,9 +80,9 @@
 
         <span id="special-announcements" class="visually-hidden"></span>
         
-        <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
-        
         <p role="text" id="remaining">Characters remaining: </p>
+
+        <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
 
         <h3>Required</h3>
         
@@ -128,15 +128,15 @@
  
     <script>
 
-      //maybe have a function that changes the attribute and style of the text area
+      //maybe have a function that changes the attribute and style of the text area?
 
       var specialAnnouncement = function(remainingCharacters) {
-        console.log('announced')
-        var announce = document.querySelector('#special-announcements')
-        announce.innerText = 'Characters remaing: ' + remainingCharacters
+        console.log('announced');
+        var announce = document.querySelector('#special-announcements');
+        announce.innerText = 'Characters remaing ' + remainingCharacters;
         setTimeout(function() {
-          announce.innerText = ''
-        })
+          announce.innerText = '';
+        }, 1000 );
       };
 
       //Character Counter
@@ -148,14 +148,17 @@
         var max = 303;
         var diff = max - count;
 
-        event.target.style.borderColor = '';
+        target.style.borderColor = '';
         target.setAttribute('aria-invalid', false);
+        target.style.borderWidth = '';
 
         // Condition for screen readers to announce
+        // not sure if needed condition if diff === max?
         if ( (diff === max) || (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
           specialAnnouncement(diff)
         } else if (diff < 1) {
-          event.target.style.borderColor = 'red';
+          target.style.borderColor = 'red';
+          target.style.borderWidth = '4px';
           target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
