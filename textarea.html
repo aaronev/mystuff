@@ -128,7 +128,7 @@
  
     <script>
 
-      //Annouces remaining characters for screen readers to r
+      //For screen readers to announce remaining characters
       var specialAnnouncement = function(remainingCharacters) {
         var announce = document.querySelector('#special-announcements');
         announce.innerText = 'Characters remaining ' + remainingCharacters;
@@ -146,24 +146,25 @@
         var max = 300;
         var diff = max - count;
 
-        target.style.color = '';
+        remaining.style.color = '';
+        remaining.textContent = 'Characters remaining ' + (diff);
         target.setAttribute('aria-invalid', false);
 
-        // screen readers will announce if conditions are met
+        //Screen readers will announce if conditions are met
         if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-          specialAnnouncement(diff)
-        } else if (diff < 0) {
-          target.style.color = 'red';
+          specialAnnouncement(diff);
+        } 
+
+        if (diff < 0) {
+          remaining.style.color = 'red';
           target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
-
-        remaining.textContent = 'Characters remaining: ' + (diff);
-
+        
       }
 
-      document.querySelector('#character-limit').addEventListener('click', characterMaxCount);
-      document.querySelector('#character-limit').addEventListener('keypress', characterMaxCount);
+      document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
+      document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
 
     </script>
   </body>
