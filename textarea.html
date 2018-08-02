@@ -56,7 +56,7 @@
       position: absolute;
       white-space: nowrap;
       width: 1px;
-    }
+      }
 
     </style>
   </head>
@@ -64,39 +64,27 @@
     <main>
 
       <h1> Text Area Examples</h1>
-      <p>Example showing barebones text area examples.</p>
+      <p role="text">Example showing barebones text area examples.</p>
 
       <form novalidate>
 
-        <h3>Character Counter</h3>
+        <h2>Character Counter</h2>
         
         <p role="text">The following shows how to count and limit the characters.</p>
         
         <span class="visually-hidden">start of text area with limited characters and character counter example</span>
         
-        <label>Description:</label>
+        <label for="character-limit">Description:</label>
 
         <textarea id="character-limit" aria-describedby="remaining"></textarea>
 
         <span id="special-announcements" class="visually-hidden" aria-live="assertive"></span>
         
-        <p role="text" id="remaining">Characters remaining 300</p>
+        <p role="text" id="remaining">300 characters remaining</p>
 
         <span class="visually-hidden">end of text area with limited characters  and character counter example</span>
 
-        <h3>Required</h3>
-        
-        <p role="text">The following shows how to make text area fields required with the <code>aria-required</code> attribute.</p>
-        
-        <span class="visually-hidden">start of aria required text area example</span>
-        
-        <label><span aria-hidden="true">*</span>Description:</label>
-
-        <textarea aria-required="true"></textarea>
-        
-        <span class="visually-hidden">end of aria required text area example</span>
-
-        <h3>Disabled</h3>
+        <h2>Disabled</h2>
         
         <p role="text">The following shows how to disable text area fields with the <code>disabled</code> attribute.</p>
         
@@ -104,21 +92,33 @@
         
         <span class="visually-hidden">start of disabled text area example</span>
         
-        <label>Description:</label>
+        <label for="disabled-textarea">Description:</label>
 
-        <textarea disabled></textarea>
+        <textarea id="disabled-textarea" disabled></textarea>
         
         <span class="visually-hidden">end of disabled text area example</span>
 
-        <h3>Invalid</h3>
+        <h2>Required</h2>
+        
+        <p role="text">The following shows how to make text area fields required with the <code>aria-required</code> attribute.</p>
+        
+        <span class="visually-hidden">start of aria required text area example</span>
+        
+        <label for="required-textarea"><span aria-hidden="true">*</span>Description:</label>
+
+        <textarea id="required-textarea" aria-required="true"></textarea>
+        
+        <span class="visually-hidden">end of aria required text area example</span>
+
+        <h2>Invalid</h2>
         
         <p role="text">The following shows how to designate invalid text area fields with the <code>aria-invalid</code> attribute.</p>
         
         <span class="visually-hidden">start of invalid text area example</span>
         
-        <label>Description:</label>
+        <label for="invalid-textarea">Description:</label>
 
-        <textarea aria-invalid="true"></textarea>
+        <textarea id="invalid-textarea" aria-invalid="true"></textarea>
         
         <span class="visually-hidden">end of invalid text area example</span>
 
@@ -131,7 +131,7 @@
       //For screen readers to announce remaining characters
       var specialAnnouncement = function(remainingCharacters) {
         var announce = document.querySelector('#special-announcements');
-        announce.innerText = 'Characters remaining ' + remainingCharacters;
+        announce.innerText = remainingCharacters + ' characters remaining ';
         setTimeout(function() {
           announce.innerText = '';
         }, 1000 );
@@ -140,14 +140,14 @@
       //Character Counter
       var characterMaxCount = function(event) {
         var remaining = document.querySelector('#remaining');
-        var target = event.target
+        var target = event.target;
         var characters = event.target.value;
         var count = characters.length;
         var max = 300;
         var diff = max - count;
 
         remaining.style.color = '';
-        remaining.textContent = 'Characters remaining ' + (diff);
+        remaining.textContent = + diff + ' characters remaining ' ;
         target.setAttribute('aria-invalid', false);
 
         //Screen readers will announce if conditions are met
@@ -160,8 +160,8 @@
           target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
-        
-      }
+
+      };
 
       document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
