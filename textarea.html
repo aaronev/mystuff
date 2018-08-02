@@ -131,7 +131,7 @@
       //For screen readers to announce remaining characters
       var specialAnnouncement = function(remainingCharacters) {
         var announce = document.querySelector('#special-announcements');
-        announce.innerText = remainingCharacters + ' characters remaining ';
+        announce.innerText = remainingCharacters + ' characters remaining';
         setTimeout(function() {
           announce.innerText = '';
         }, 1000 );
@@ -147,7 +147,7 @@
         var diff = max - count;
 
         remaining.style.color = '';
-        remaining.textContent = + diff + ' characters remaining ' ;
+        remaining.textContent = + diff + ' characters remaining' ;
         target.setAttribute('aria-invalid', false);
 
         //Screen readers will announce if conditions are met
