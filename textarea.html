@@ -127,44 +127,85 @@
     </main>
  
     <script>
-
+    
       //For screen readers to announce remaining characters
-      var specialAnnouncement = function(remainingCharacters) {
-        var announce = document.querySelector('#special-announcements');
-        announce.innerText = remainingCharacters + ' characters remaining';
+      function SpecialAnnouncement() {
+        this.liveRegion = document.querySelector('#special-announcements');
+      };
+
+      SpecialAnnouncement.prototype.on = function() {
+        this.liveRegion.setAttribute('aria-live', 'assertive')
+      }
+
+      SpecialAnnouncement.prototype.off = function() {
+        this.liveRegion.setAttribute('aria-live', 'off')
+      }
+
+      SpecialAnnouncement.prototype.clearAnnouncement = function() {
         setTimeout(function() {
-          announce.innerText = '';
-        }, 1000 );
+          this.liveRegion.textContent = '';
+        }, 1000 );    
+      };
+
+      SpecialAnnouncement.prototype.announce = function(remainingCharacters) {
+        this.liveRegion.textContent = remainingCharacters + ' characters remaining';
+      };
+
+      SpecialAnnouncement.prototype.announceOnPause = function(remainingCharacters) {
+        console.log('ehadlfj;')
+        setTimeout(this.announce(remainingCharacters), 2000);
       };
 
       //Character Counter
-      var characterMaxCount = function(event) {
-        var remaining = document.querySelector('#remaining');
-        var target = event.target;
-        var characters = event.target.value;
-        var count = characters.length;
-        var max = 300;
-        var diff = max - count;
-
-        remaining.style.color = '';
-        remaining.textContent = + diff + ' characters remaining' ;
-        target.setAttribute('aria-invalid', false);
-
-        //Screen readers will announce if conditions are met
-        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-          specialAnnouncement(diff);
-        } 
-
-        if (diff < 0) {
-          remaining.style.color = 'red';
-          target.setAttribute('aria-invalid', true);
-          console.log("You've exceeded maximum amount of "+max+" characters!");
-        } 
-
+      function CharacterMaxCountDownTextarea(event) {
+        this.remaining = document.querySelector('#remaining');
+        this.targ = event.target;
+        this.characters = event.target.value;
+        this.count = this.characters.length;
+        this.max = 300;
+        this.diff = this.max - this.count;
       };
 
-      document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
-      document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
+      CharacterMaxCountDownTextarea.prototype.visualChange = function() {
+        this.remaining.textContent = 'Characters remaining ' + this.diff;
+      };
+
+      CharacterMaxCountDownTextarea.prototype.resetStyleAndAttribute = function() {
+        this.remaining.style.color = '';
+        this.targ.setAttribute('aria-invalid', false);        
+      };
+
+      CharacterMaxCountDownTextarea.prototype.exceedsMax = function() {
+        if (this.diff < 0) {
+          this.remaining.style.color = 'red';
+          this.targ.setAttribute('aria-invalid', true);
+          console.log("You've exceeded maximum amount of "+this.max+" characters!");
+        }; 
+      };
+
+      var forLiveRegion = new SpecialAnnouncement()
+
+      CharacterMaxCountDownTextarea.prototype.initialize = function() {
+        this.visualChange();
+        this.resetStyleAndAttribute();
+        this.exceedsMax();
+        forLiveRegion.announceOnPause(this.diff);
+      };
+
+      //Event listeners for character count
+      document.querySelector('#character-limit').addEventListener('click', function(event) {
+        new CharacterMaxCountDownTextarea(event).initialize() 
+      });
+
+      document.querySelector('#character-limit').addEventListener('keydown', function(event) {
+        new CharacterMaxCountDownTextarea(event).initialize()
+      });
+
+      Event listeners for special annoucement
+      document.querySelector('#character-limit').addEventListener('keyup', function() {
+        forLiveRegion.on()
+        setTimeout(forLiveRegion.off(), 1000)
+      });
 
     </script>
   </body>
