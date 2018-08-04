@@ -127,85 +127,57 @@
     </main>
  
     <script>
-    
-      //For screen readers to announce remaining characters
-      function SpecialAnnouncement() {
-        this.liveRegion = document.querySelector('#special-announcements');
-      };
 
-      SpecialAnnouncement.prototype.on = function() {
-        this.liveRegion.setAttribute('aria-live', 'assertive')
+      //note to self nothing works
+      //make sure it you figure out how to debounce?
+      //so you can clear a whole function if it has setTimeout
+
+      var charactersLeft; 
+
+      var announcementforLiveRegion = function(timeToEx) {
+        setTimeout( function() {
+          charactersLeft = charactersLeft || 300
+          var announce = document.querySelector('#special-announcements');
+          announce.innerText = charactersLeft + ' characters remaining';
+        }, timToEx );
       }
 
-      SpecialAnnouncement.prototype.off = function() {
-        this.liveRegion.setAttribute('aria-live', 'off')
+      var announceOnPause = function() {
+        announcementforLiveRegion()
       }
-
-      SpecialAnnouncement.prototype.clearAnnouncement = function() {
-        setTimeout(function() {
-          this.liveRegion.textContent = '';
-        }, 1000 );    
-      };
-
-      SpecialAnnouncement.prototype.announce = function(remainingCharacters) {
-        this.liveRegion.textContent = remainingCharacters + ' characters remaining';
-      };
-
-      SpecialAnnouncement.prototype.announceOnPause = function(remainingCharacters) {
-        console.log('ehadlfj;')
-        setTimeout(this.announce(remainingCharacters), 2000);
-      };
 
       //Character Counter
-      function CharacterMaxCountDownTextarea(event) {
-        this.remaining = document.querySelector('#remaining');
-        this.targ = event.target;
-        this.characters = event.target.value;
-        this.count = this.characters.length;
-        this.max = 300;
-        this.diff = this.max - this.count;
+      var characterMaxCount = function(event) {
+        var remaining = document.querySelector('#remaining');
+        var target = event.target;
+        var characters = event.target.value;
+        var count = characters.length;
+        var max = 300;
+        var diff = max - count;
+
+
+        remaining.style.color = '';
+        remaining.textContent = 'Characters remaining ' + diff ;
+        target.setAttribute('aria-invalid', false);
+
+
+        if (diff < 0) {
+          remaining.style.color = 'red';
+          target.setAttribute('aria-invalid', true);
+          console.log("You've exceeded maximum amount of "+max+" characters!");
+        } 
+
+        clearTimeout(announcementforLiveRegion)
+        charactersLeft = diff
+        
       };
 
-      CharacterMaxCountDownTextarea.prototype.visualChange = function() {
-        this.remaining.textContent = 'Characters remaining ' + this.diff;
-      };
+      document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
+      document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
 
-      CharacterMaxCountDownTextarea.prototype.resetStyleAndAttribute = function() {
-        this.remaining.style.color = '';
-        this.targ.setAttribute('aria-invalid', false);        
-      };
+      //Screen readers will announce on pause
+      document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
 
-      CharacterMaxCountDownTextarea.prototype.exceedsMax = function() {
-        if (this.diff < 0) {
-          this.remaining.style.color = 'red';
-          this.targ.setAttribute('aria-invalid', true);
-          console.log("You've exceeded maximum amount of "+this.max+" characters!");
-        }; 
-      };
-
-      var forLiveRegion = new SpecialAnnouncement()
-
-      CharacterMaxCountDownTextarea.prototype.initialize = function() {
-        this.visualChange();
-        this.resetStyleAndAttribute();
-        this.exceedsMax();
-        forLiveRegion.announceOnPause(this.diff);
-      };
-
-      //Event listeners for character count
-      document.querySelector('#character-limit').addEventListener('click', function(event) {
-        new CharacterMaxCountDownTextarea(event).initialize() 
-      });
-
-      document.querySelector('#character-limit').addEventListener('keydown', function(event) {
-        new CharacterMaxCountDownTextarea(event).initialize()
-      });
-
-      Event listeners for special annoucement
-      document.querySelector('#character-limit').addEventListener('keyup', function() {
-        forLiveRegion.on()
-        setTimeout(forLiveRegion.off(), 1000)
-      });
 
     </script>
   </body>
