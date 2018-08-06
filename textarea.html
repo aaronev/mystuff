@@ -78,7 +78,7 @@
 
         <textarea id="character-limit" aria-describedby="remaining"></textarea>
 
-        <span id="special-announcements" class="visually-hidden" aria-live="polite"></span>
+        <span id="special-announcements" class="visually-hidden" aria-live="assertive"></span>
         
         <p role="text" id="remaining">Characters remaining 300</p>
 
@@ -128,19 +128,23 @@
  
     <script>
 
-      var charactersLeft; 
-      var announce = document.querySelector('#special-announcements');
-
-      var announceOnPause = function() {
-          setTimeout( function() {
-            announce.innerText = charactersLeft + ' characters remaining';
-        }, 1000);
-      }
-
-      var clearAnnouncement = function() { 
+      var clearTextOnPause = function(querySelector) {
         setTimeout( function() {
-          announce.innerText = '';
+          querySelector.innerText = '';
         }, 1500);
+      };
+
+      
+      var announceOnPause = function(event) {
+        var liveRegion = document.querySelector('#special-announcements');
+        
+        clearTimeout(window.announce)
+
+        window.announce = setTimeout( function() {
+          liveRegion.innerText = event.target.diff + ' characteres remaining';
+        }, 1000);
+        
+        clearTextOnPause(liveRegion)
       }
 
       //Character Counter
@@ -163,20 +167,13 @@
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
 
-        //on keydown announcment will not be announced
-        clearTimeout(announceOnPause());
-        charactersLeft = diff;
-        
+        target.diff = diff
+
       };
 
       document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
-
-      //Screen readers will announce on pause
-      document.querySelector('#character-limit').addEventListener('keyup', function() {
-        announceOnPause();
-        clearAnnouncement();  
-      });
+      document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
 
 
     </script>
