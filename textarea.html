@@ -137,15 +137,13 @@
 
       var announceOnPause = function(event) {
         var liveRegion = document.querySelector('#special-announcements');
-        
-        clearTimeout(window.announce)
 
         window.announce = setTimeout( function() {
           liveRegion.innerText = event.target.diff + ' characteres remaining';
         }, 1000);
-        
-        clearTextOnPause(liveRegion)
-      }
+
+        clearTextOnPause(liveRegion);
+      };
 
       //Character Counter
       var characterMaxCount = function(event) {
@@ -156,6 +154,10 @@
         var max = 300;
         var diff = max - count;
 
+        //clears announcement on keydown
+        clearTimeout(window.announce);
+
+        //resets back to default
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff ;
         target.setAttribute('aria-invalid', false);
@@ -174,7 +176,6 @@
       document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
       document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
-
 
     </script>
   </body>
