@@ -78,7 +78,7 @@
 
         <textarea id="character-limit" aria-describedby="remaining"></textarea>
 
-        <span id="special-announcements" class="visually-hidden" aria-live="assertive"></span>
+        <span id="special-announcements" class="visually-hidden" aria-live="polite"></span>
         
         <p role="text" id="remaining">Characters remaining 300</p>
 
@@ -129,16 +129,21 @@
     <script>
 
       var charactersLeft; 
+      var announce = document.querySelector('#special-announcements');
 
-      var announceOnPause = setTimeout( function() {
-          var announce = document.querySelector('#special-announcements');
-          announce.innerText = charactersLeft + ' characters remaining';
+      var announceOnPause = function() {
+          setTimeout( function() {
+            console.log('announce on pause')
+            announce.innerText = charactersLeft + ' characters remaining';
         }, 1000);
+      }
 
-      var clearAnnouncement = setTimeout( function() {
-        var announce = document.querySelector('#special-announcements');
-        announce.innerText = '';
-      });
+      var clearAnnouncement = function() { 
+        setTimeout( function() {
+          console.log('announce clearns')
+          announce.innerText = '';
+        }, 1500);
+      }
 
       //Character Counter
       var characterMaxCount = function(event) {
@@ -148,7 +153,6 @@
         var count = characters.length;
         var max = 300;
         var diff = max - count;
-
 
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff ;
@@ -161,8 +165,9 @@
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
 
-        clearTimeout(announceOnPause)
-        charactersLeft = diff
+        //on keydown announcment will not be announced
+        clearTimeout(announceOnPause());
+        charactersLeft = diff;
         
       };
 
@@ -171,8 +176,9 @@
 
       //Screen readers will announce on pause
       document.querySelector('#character-limit').addEventListener('keyup', function() {
+        console.log('hello', charactersLeft);
         announceOnPause();
-        clearAnnouncement();
+        clearAnnouncement();  
       });
 
 
