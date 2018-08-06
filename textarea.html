@@ -128,24 +128,26 @@
  
     <script>
 
+      //clears live region afer announcement
       var clearTextOnPause = function(querySelector) {
         setTimeout( function() {
           querySelector.innerText = '';
-        }, 1500);
+        }, 1000);
       };
 
-
-      var announceOnPause = function(event) {
+      //live region special announcement
+      var specialAnnouncementOnPause = function(event) {
         var liveRegion = document.querySelector('#special-announcements');
 
+        //sets up special annoucenment on pause
         window.announce = setTimeout( function() {
           liveRegion.innerText = event.target.diff + ' characteres remaining';
+          clearTextOnPause(liveRegion);
         }, 1000);
 
-        clearTextOnPause(liveRegion);
       };
 
-      //Character Counter
+      //character counter down from max
       var characterMaxCount = function(event) {
         var remaining = document.querySelector('#remaining');
         var target = event.target;
@@ -157,25 +159,26 @@
         //clears announcement on keydown
         clearTimeout(window.announce);
 
-        //resets back to default
+        //constantly sets to default
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff;
         target.setAttribute('aria-invalid', false);
 
-
+        //changes visual count color to red and textarea to be invalid
         if (diff < 0) {
           remaining.style.color = 'red';
           target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
 
+        //attach diff to target for announcement
         target.diff = diff;
 
       };
 
       document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
-      document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
+      document.querySelector('#character-limit').addEventListener('keyup', specialAnnouncementOnPause);
 
     </script>
   </body>
