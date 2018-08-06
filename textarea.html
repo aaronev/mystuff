@@ -128,23 +128,17 @@
  
     <script>
 
-      //note to self nothing works
-      //make sure it you figure out how to debounce?
-      //so you can clear a whole function if it has setTimeout
-
       var charactersLeft; 
 
-      var announcementforLiveRegion = function(timeToEx) {
-        setTimeout( function() {
-          charactersLeft = charactersLeft || 300
+      var announceOnPause = setTimeout( function() {
           var announce = document.querySelector('#special-announcements');
           announce.innerText = charactersLeft + ' characters remaining';
-        }, timToEx );
-      }
+        }, 1000);
 
-      var announceOnPause = function() {
-        announcementforLiveRegion()
-      }
+      var clearAnnouncement = setTimeout( function() {
+        var announce = document.querySelector('#special-announcements');
+        announce.innerText = '';
+      });
 
       //Character Counter
       var characterMaxCount = function(event) {
@@ -167,7 +161,7 @@
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
 
-        clearTimeout(announcementforLiveRegion)
+        clearTimeout(announceOnPause)
         charactersLeft = diff
         
       };
@@ -176,7 +170,10 @@
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
 
       //Screen readers will announce on pause
-      document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
+      document.querySelector('#character-limit').addEventListener('keyup', function() {
+        announceOnPause();
+        clearAnnouncement();
+      });
 
 
     </script>
