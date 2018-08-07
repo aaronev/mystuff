@@ -128,7 +128,7 @@
  
     <script>
 
-      var liveRegionTextAreaCharacterCountAnnouncementOnPause = false
+      var liveRegionAnnouncementOnPause;
 
       //clears live region afer announcement
       var clearTextOnPause = function(querySelector) {
@@ -144,6 +144,13 @@
         clearTextOnPause(announce);
       };
 
+      //special announcement will announce on pause
+      var announceOnPause = function(event) {
+        liveRegionAnnouncementOnPause = setTimeout(function() {
+          specialAnnouncement(300 - event.target.value.length)
+        }, 2000 );
+      };
+
       //character counter down from max
       var characterMaxCount = function(event) {
         var remaining = document.querySelector('#remaining');
@@ -154,13 +161,13 @@
         var diff = max - count;
 
         //clears announcement on keydown
-        clearTimeout(liveRegionTextAreaCharacterCountAnnouncement);
+        clearTimeout(liveRegionAnnouncementOnPause);
 
         //constantly sets to default
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff;
 
-        //changes visual count color to red and textarea to be invalid
+        //changes visual count color to red
         if (diff < 0) {
           remaining.style.color = 'red';
           console.log("You've exceeded maximum amount of " + max + " characters!");
@@ -171,26 +178,10 @@
           specialAnnouncement(diff);
         } 
 
-        if (liveRegionTextAreaCharacterCountAnnouncementOnPause) {
-          specialAnnouncement(diff)
-        }
-
-
-        
       };
 
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
-      document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
-
-      // var announceOnKeyUp = function() {
-      //     document.querySelector('#character-limit').addEventListener('keyup', function(event) {
-      //       setTimeout(specialAnnouncement(300-event.target.value.length), 1000);
-      //     });
-      //   liveRegionTextAreaCharacterCountAnnouncement = false;
-      // }
-
-
-        
+      document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
 
     </script>
   </body>
