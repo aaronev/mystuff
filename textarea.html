@@ -128,14 +128,7 @@
  
     <script>
 
-      var liveRegionTextAreaCharacterCountAnnouncement;
-
-      var announceOnKeyUp = function() {
-          document.querySelector('#character-limit').addEventListener('keyup', function(event) {
-            setTimeout(specialAnnouncement(300-event.target.value.length), 1000);
-          });
-        liveRegionTextAreaCharacterCountAnnouncement = false;
-      }
+      var liveRegionTextAreaCharacterCountAnnouncementOnPause = false
 
       //clears live region afer announcement
       var clearTextOnPause = function(querySelector) {
@@ -167,27 +160,34 @@
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff;
 
-        //screen readers will announce if conditions are met
-        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-          setTimeout(specialAnnouncement(diff), 1000);
-          liveRegionTextAreaCharacterCountAnnouncement = true;
-        } 
-
         //changes visual count color to red and textarea to be invalid
         if (diff < 0) {
           remaining.style.color = 'red';
-          console.log("You've exceeded maximum amount of "+max+" characters!");
+          console.log("You've exceeded maximum amount of " + max + " characters!");
         } 
-        
-        if (liveRegionTextAreaCharacterCountAnnouncement) {
-          announceOnKeyUp();
+
+        //screen readers will announce if conditions are met
+        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
+          specialAnnouncement(diff);
+        } 
+
+        if (liveRegionTextAreaCharacterCountAnnouncementOnPause) {
+          specialAnnouncement(diff)
         }
 
+
+        
       };
 
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
+      document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
 
-
+      // var announceOnKeyUp = function() {
+      //     document.querySelector('#character-limit').addEventListener('keyup', function(event) {
+      //       setTimeout(specialAnnouncement(300-event.target.value.length), 1000);
+      //     });
+      //   liveRegionTextAreaCharacterCountAnnouncement = false;
+      // }
 
 
         
