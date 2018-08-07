@@ -50,12 +50,12 @@
       }
 
       .visually-hidden {
-      clip: rect(1px, 1px, 1px, 1px);
-      height: 1px;
-      overflow: hidden;
-      position: absolute;
-      white-space: nowrap;
-      width: 1px;
+        clip: rect(1px, 1px, 1px, 1px);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
       }
 
     </style>
@@ -160,9 +160,6 @@
         var max = 300;
         var diff = max - count;
 
-        //clears announcement on keydown
-        clearTimeout(liveRegionAnnouncementOnPause);
-
         //constantly sets to default
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff;
@@ -178,10 +175,12 @@
           specialAnnouncement(diff);
         } 
 
+        announceOnPause(event);
+
       };
 
-      document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
-      document.querySelector('#character-limit').addEventListener('keyup', announceOnPause);
+      document.querySelector('#character-limit').addEventListener('keyup', characterMaxCount);
+      document.querySelector('#character-limit').addEventListener('keydown', clearTimeout(liveRegionAnnouncementOnPause));
 
     </script>
   </body>
