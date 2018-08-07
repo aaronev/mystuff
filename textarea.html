@@ -128,6 +128,15 @@
  
     <script>
 
+      var liveRegionTextAreaCharacterCountAnnouncement;
+
+      var announceOnKeyUp = function() {
+          document.querySelector('#character-limit').addEventListener('keyup', function(event) {
+            setTimeout(specialAnnouncement(300-event.target.value.length), 1000);
+          });
+        liveRegionTextAreaCharacterCountAnnouncement = false;
+      }
+
       //clears live region afer announcement
       var clearTextOnPause = function(querySelector) {
         setTimeout( function() {
@@ -135,16 +144,11 @@
         }, 1000);
       };
 
-      //live region special announcement
-      var specialAnnouncementOnPause = function(event) {
-        var liveRegion = document.querySelector('#special-announcements');
-
-        //sets up special annoucenment on pause
-        window.announce = setTimeout( function() {
-          liveRegion.innerText = event.target.diff + ' characteres remaining';
-          clearTextOnPause(liveRegion);
-        }, 1000);
-
+      //special announcement
+      var specialAnnouncement = function(remChar) {
+        var announce = document.querySelector('#special-announcements');
+        announce.innerText = remChar + ' characters remaining';
+        clearTextOnPause(announce);
       };
 
       //character counter down from max
@@ -157,28 +161,36 @@
         var diff = max - count;
 
         //clears announcement on keydown
-        clearTimeout(window.announce);
+        clearTimeout(liveRegionTextAreaCharacterCountAnnouncement);
 
         //constantly sets to default
         remaining.style.color = '';
         remaining.textContent = 'Characters remaining ' + diff;
-        target.setAttribute('aria-invalid', false);
+
+        //screen readers will announce if conditions are met
+        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
+          setTimeout(specialAnnouncement(diff), 1000);
+          liveRegionTextAreaCharacterCountAnnouncement = true;
+        } 
 
         //changes visual count color to red and textarea to be invalid
         if (diff < 0) {
           remaining.style.color = 'red';
-          target.setAttribute('aria-invalid', true);
           console.log("You've exceeded maximum amount of "+max+" characters!");
         } 
-
-        //attach diff to target for announcement
-        target.diff = diff;
+        
+        if (liveRegionTextAreaCharacterCountAnnouncement) {
+          announceOnKeyUp();
+        }
 
       };
 
-      document.querySelector('#character-limit').addEventListener('click', characterMaxCount);  
       document.querySelector('#character-limit').addEventListener('keydown', characterMaxCount);
-      document.querySelector('#character-limit').addEventListener('keyup', specialAnnouncementOnPause);
+
+
+
+
+        
 
     </script>
   </body>
