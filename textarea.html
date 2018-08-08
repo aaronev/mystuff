@@ -128,59 +128,61 @@
  
     <script>
 
-      var liveRegionAnnouncementOnPause;
-
-      //clears live region afer announcement
-      var clearTextOnPause = function(querySelector) {
-        setTimeout( function() {
-          querySelector.innerText = '';
-        }, 1000);
-      };
-
-      //special announcement
-      var specialAnnouncement = function(remChar) {
-        var announce = document.querySelector('#special-announcements');
-        announce.innerText = remChar + ' characters remaining';
-        clearTextOnPause(announce);
-      };
-
-      //special announcement will announce on pause
-      var announceOnPause = function(event) {
-        liveRegionAnnouncementOnPause = setTimeout(function() {
-          specialAnnouncement(300 - event.target.value.length);
-        }, 2000 );
-      };
-
       //character counter down from max
       var characterMaxCount = function(event) {
         var remaining = document.querySelector('#remaining');
+        var announce = document.querySelector('#special-announcements');
         var target = event.target;
-        var characters = event.target.value;
-        var count = characters.length;
-        var max = 300;
-        var diff = max - count;
+        var charactersCount = event.target.value.length;
+        var diff = 300 - count;
 
-        //constantly sets to default
-        remaining.style.color = '';
-        remaining.textContent = 'Characters remaining ' + diff;
 
-        //changes visual count color to red
-        if (diff < 0) {
+        //special announcement
+        var specialAnnouncement = function() {
+          announce.innerText = diff + ' characters remaining';
+          clearTextOnPause(announce);
+
+          //clears live region after announcement
+          setTimeout( function() {
+            announce.innerText = ''
+          }, 1000);
+        };
+
+        if (diff < 0) { 
+
+          //changes visual count color to red
           remaining.style.color = 'red';
           console.log("You've exceeded maximum amount of " + max + " characters!");
-        } 
 
-        //screen readers will announce if conditions are met
+        } else {  
+
+          //constantly sets to default
+          remaining.style.color = '';
+          remaining.textContent = 'Characters remaining ' + diff;
+
+        }
+
         if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-          specialAnnouncement(diff);
-        } 
+          //screen readers will announce if conditions are met
+          specialAnnouncement();
+        } else {
 
-        announceOnPause(event);
+          //for setting and clearing timeout
+          var liveRegionAnnouncementOnPause;
+
+          //clears the liveRegionAnnouncementOnPause
+          clearTimeout(liveRegionAnnouncementOnPause);
+
+          //screen reader will announce on pause
+          liveRegionAnnouncementOnPause = setTimeout(function() {
+            specialAnnouncement();
+          }, 2000 );
+
+        }
 
       };
 
       document.querySelector('#character-limit').addEventListener('keyup', characterMaxCount);
-      document.querySelector('#character-limit').addEventListener('keydown', clearTimeout(liveRegionAnnouncementOnPause));
 
     </script>
   </body>
