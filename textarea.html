@@ -128,19 +128,17 @@
  
     <script>
 
-      //character counter down from max
-      var characterMaxCount = function(event) {
+      //character counter down from max with live region
+      var characterMaxCountWithSpecialAnnouncement = function(event) {
         var remaining = document.querySelector('#remaining');
         var announce = document.querySelector('#special-announcements');
         var target = event.target;
         var charactersCount = event.target.value.length;
         var diff = 300 - count;
 
-
         //special announcement
         var specialAnnouncement = function() {
           announce.innerText = diff + ' characters remaining';
-          clearTextOnPause(announce);
 
           //clears live region after announcement
           setTimeout( function() {
@@ -163,9 +161,11 @@
         }
 
         if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
+
           //screen readers will announce if conditions are met
           specialAnnouncement();
-        } else {
+
+        } else { //to prevent from announcing twice if condtions are met and having a pause
 
           //for setting and clearing timeout
           var liveRegionAnnouncementOnPause;
@@ -182,7 +182,7 @@
 
       };
 
-      document.querySelector('#character-limit').addEventListener('keyup', characterMaxCount);
+      document.querySelector('#character-limit').addEventListener('keyup', characterMaxCountWithSpecialAnnouncement);
 
     </script>
   </body>
