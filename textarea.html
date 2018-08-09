@@ -78,7 +78,7 @@
 
         <textarea id="character-limit" aria-describedby="remaining"></textarea>
 
-        <span id="special-announcements" class="visually-hidden" aria-live="assertive"></span>
+        <span id="special-announcements" class="visually-hidden" aria-live="polite"></span>
         
         <p role="text" id="remaining">Characters remaining 300</p>
 
@@ -110,7 +110,7 @@
         
         <span class="visually-hidden">end of aria required text area example</span>
 
-        <h2>Invalid</h2>
+        <h2 role="text">Invalid</h2>
         
         <p role="text">The following shows how to designate invalid text area fields with the <code>aria-invalid</code> attribute.</p>
         
@@ -128,61 +128,60 @@
  
     <script>
 
-      //character counter down from max with live region
-      var characterMaxCountWithSpecialAnnouncement = function(event) {
-        var remaining = document.querySelector('#remaining');
-        var announce = document.querySelector('#special-announcements');
-        var target = event.target;
-        var charactersCount = event.target.value.length;
-        var diff = 300 - count;
+      //for setting and clearing timeout
+      var liveRegionAnnounceOnPause;
 
-        //special announcement
-        var specialAnnouncement = function() {
-          announce.innerText = diff + ' characters remaining';
+      //setting max amount of characters
+      var max = 300;
+
+      //character count down from max with live region
+      var characterMaxCountWithSpecialAnnouncement = function(event) {
+        var announce = document.querySelector('#special-announcements');
+        var visualCount = document.querySelector('#remaining');
+        var charactersCount = event.target.value.length;
+        var remaining = max - charactersCount;
+
+        //updates visual count
+        visualCount.textContent = 'Characters remaining ' + remaining;
+
+        //constantly sets to default
+        visualCount.style.color = '';
+        announce.setAttribute('live-region', 'polite');
+
+        if (remaining < 0) { 
+
+          //changes visual count color to red
+          visualCount.style.color = 'red';
+          console.log("You've exceeded maximum amount of " + max + " characters! " + remaining);
+
+        } else if (remaining < 50) {
+
+          //turns live region to announce assertively for importance
+          announce.setAttribute('live-region', 'assertive');
+
+        } 
+        
+        //clears the liveRegion announcing on pause
+        clearTimeout(liveRegionAnnounceOnPause);
+      
+        //screen reader will announce on pause
+        liveRegionAnnounceOnPause = setTimeout(function() {
+
+          //special announcement to live region
+          announce.innerText = remaining + ' characters remaining';
 
           //clears live region after announcement
           setTimeout( function() {
             announce.innerText = ''
-          }, 1000);
-        };
+          }, 1000 );
 
-        if (diff < 0) { 
-
-          //changes visual count color to red
-          remaining.style.color = 'red';
-          console.log("You've exceeded maximum amount of " + max + " characters!");
-
-        } else {  
-
-          //constantly sets to default
-          remaining.style.color = '';
-          remaining.textContent = 'Characters remaining ' + diff;
-
-        }
-
-        if ( (diff % 50 === 0) || (diff === 25)|| (diff === 10) ) {
-
-          //screen readers will announce if conditions are met
-          specialAnnouncement();
-
-        } else { //to prevent from announcing twice if condtions are met and having a pause
-
-          //for setting and clearing timeout
-          var liveRegionAnnouncementOnPause;
-
-          //clears the liveRegionAnnouncementOnPause
-          clearTimeout(liveRegionAnnouncementOnPause);
-
-          //screen reader will announce on pause
-          liveRegionAnnouncementOnPause = setTimeout(function() {
-            specialAnnouncement();
-          }, 2000 );
-
-        }
+        }, 2000 );
 
       };
 
       document.querySelector('#character-limit').addEventListener('keyup', characterMaxCountWithSpecialAnnouncement);
+      document.querySelector('#character-limit').addEventListener('blur', function() { clearTimeout(liveRegionAnnounceOnPause); });
+
 
     </script>
   </body>
