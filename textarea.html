@@ -131,14 +131,12 @@
       //for setting and clearing timeout
       var liveRegionAnnounceOnPause;
 
-      //setting max amount of characters
-      var max = 300;
-
       //character count down from max with live region
       var characterMaxCountWithSpecialAnnouncement = function(event) {
         var announce = document.querySelector('#special-announcements');
         var visualCount = document.querySelector('#remaining');
         var charactersCount = event.target.value.length;
+         var max = 300;
         var remaining = max - charactersCount;
 
         //updates visual count
