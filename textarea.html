@@ -146,7 +146,7 @@
 
         //constantly sets to default
         visualCount.style.color = '';
-        announce.setAttribute('live-region', 'polite');
+        announce.setAttribute('aria-live', 'polite');
 
         if (remaining < 0) { 
 
@@ -157,7 +157,7 @@
         } else if (remaining < 50) {
 
           //turns live region to announce assertively for importance
-          announce.setAttribute('live-region', 'assertive');
+          announce.setAttribute('aria-live', 'assertive');
 
         } 
         
