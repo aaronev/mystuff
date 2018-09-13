@@ -142,16 +142,9 @@
         //updates visual count
         visualCount.textContent = 'Characters remaining ' + remaining;
 
-        //constantly sets to default
-        visualCount.style.color = '';
-
-        if (remaining < 0) { 
-
-          //changes visual count color to red
-          visualCount.style.color = 'red';
-          console.log("You've exceeded maximum amount of " + max + " characters! " + remaining);
-
-        }
+        (remaining < 0) 
+          ? visualCount.style.color = 'red' //changes visual count color to red
+          : visualCount.style.color = ''; //constantly sets to default
         
         //clears the liveRegion announcing on pause
         clearTimeout(liveRegionAnnounceOnPause);
