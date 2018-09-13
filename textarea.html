@@ -78,7 +78,7 @@
 
         <textarea id="character-limit" aria-describedby="remaining"></textarea>
 
-        <span id="special-announcements" class="visually-hidden" aria-live="polite"></span>
+        <span id="special-announcements" class="visually-hidden" aria-live="assertive"></span>
         
         <p role="text" id="remaining">Characters remaining 300</p>
 
@@ -144,7 +144,6 @@
 
         //constantly sets to default
         visualCount.style.color = '';
-        announce.setAttribute('aria-live', 'polite');
 
         if (remaining < 0) { 
 
@@ -152,12 +151,7 @@
           visualCount.style.color = 'red';
           console.log("You've exceeded maximum amount of " + max + " characters! " + remaining);
 
-        } else if (remaining < 50) {
-
-          //turns live region to announce assertively for importance
-          announce.setAttribute('aria-live', 'assertive');
-
-        } 
+        }
         
         //clears the liveRegion announcing on pause
         clearTimeout(liveRegionAnnounceOnPause);
@@ -173,7 +167,7 @@
             announce.innerText = ''
           }, 1000 );
 
-        }, 2000 );
+        }, 900 );
 
       };
 
