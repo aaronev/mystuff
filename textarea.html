@@ -131,6 +131,9 @@
       //for setting and clearing timeout
       var liveRegionAnnounceOnPause;
 
+      //saves character count everytime it changes
+      var savedCharacterCount;
+
       //character count down from max with live region
       var characterMaxCountWithSpecialAnnouncement = function(event) {
         var announce = document.querySelector('#special-announcements');
@@ -139,28 +142,28 @@
         var max = 300;
         var remaining = max - charactersCount;
 
-        //updates visual count
-        visualCount.textContent = 'Characters remaining ' + remaining;
+        //only announces if character count length changes
+        if (savedCharacterCount !== charactersCount) {
 
-        (remaining < 0) 
-          ? visualCount.style.color = 'red' //changes visual count color to red
-          : visualCount.style.color = ''; //constantly sets to default
+          savedCharacterCount = characterCount;
         
-        //clears the liveRegion announcing on pause
-        clearTimeout(liveRegionAnnounceOnPause);
-      
-        //screen reader will announce on pause
-        liveRegionAnnounceOnPause = setTimeout(function() {
+          //clears the liveRegion announcing on pause
+          clearTimeout(liveRegionAnnounceOnPause);
+        
+          //screen reader will announce on pause
+          liveRegionAnnounceOnPause = setTimeout(function() {
 
-          //special announcement to live region
-          announce.innerText = remaining + ' characters remaining';
+            //special announcement to live region
+            announce.innerText = remaining + ' characters remaining';
 
-          //clears live region after announcement
-          setTimeout( function() {
-            announce.innerText = ''
-          }, 1000 );
+            //clears live region after announcement
+            setTimeout( function() {
+              announce.innerText = ''
+            }, 1000 );
 
-        }, 900 );
+          }, 900 );
+
+        }
 
       };
 
