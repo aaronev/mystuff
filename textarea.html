@@ -138,15 +138,18 @@
       var characterMaxCountWithSpecialAnnouncement = function(event) {
         var announce = document.querySelector('#special-announcements');
         var visualCount = document.querySelector('#remaining');
-        var charactersCount = event.target.value.length;
+        var characterCount = event.target.value.length;
         var max = 300;
-        var remaining = max - charactersCount;
+        var remaining = max - characterCount;
 
         //only announces if character count length changes
-        if (savedCharacterCount !== charactersCount) {
+        if (savedCharacterCount !== characterCount) {
 
           savedCharacterCount = characterCount;
-        
+          
+          //updates visual count
+          visualCount.innerText = 'Characters remaining ' + remaining
+
           //clears the liveRegion announcing on pause
           clearTimeout(liveRegionAnnounceOnPause);
         
@@ -159,7 +162,7 @@
             //clears live region after announcement
             setTimeout( function() {
               announce.innerText = ''
-            }, 1000 );
+            }, 250 );
 
           }, 900 );
 
