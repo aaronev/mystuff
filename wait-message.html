@@ -201,5 +201,18 @@
       </div>
       <button id="continue" aria-live="assertive" hidden>Cancel</button>
   </div>
+  <script>
+    var Alert;
+    document.getElementById("continue").addEventListener("click", function() { Alert.close() });
+    document.querySelector("button").addEventListener("click", function() {
+      Alert = new AlertBoxOverlay(
+        document.querySelector("input[name='image']:checked").value,
+        document.querySelector("input[name='animate']:checked").value,
+        document.querySelector("input[name='text']:checked").value,
+        document.querySelector("input[name='button']:checked").value,
+        10
+      );
+    })
+  </script>
 </body>
 </html>
