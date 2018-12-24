@@ -131,6 +131,62 @@
   </style>
 </head>
 <body>
-
+  <main>
+    <div id="overlay">
+      <h1>Wait Message Example</h1>
+      <p>The following is a generator of a barebones Wait Message.</p>
+      <fieldset>
+        <legend>Select Image:</legend>
+        <div>
+          <input id="spin" type="radio" name="image" value="spin" checked>
+          <label for="spin">Spinner</label>
+        </div>
+        <div>
+          <input id="bar" type="radio" name="image" value="bar">
+          <label for="bar">Spinner</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Select Animation:</legend>
+        <div>
+          <input id="indefinite" type="radio" name="animate" value="indefinite" checked>
+          <label for="indefinite">Indefinite</label>
+        </div>
+        <div>
+          <input id="definite" type="radio" name="animate" value="definite">
+          <label for="definite">Indefinite</label>
+        </div>
+      </fieldset>
+            <fieldset>
+        <legend>Select Text:</legend>
+        <div>
+          <input id="timer" type="radio" name="text" value="timer" checked>
+          <label for="timer">Timer</label>
+        </div>
+        <div>
+          <input id="load" type="radio" name="text" value="load">
+          <label for="load">Loading</label>
+        </div>
+        <div>
+          <input id="untimed" type="radio" name="text" value="untimed">
+          <label for="untimed">Please Wait (Untimed)</label>
+        </div>
+      </fieldset>
+            <fieldset>
+        <legend>Button (Optional):</legend>
+        <div>
+          <input id="yes" type="radio" name="button" value="yes">
+          <label for="yes">Yes</label>
+        </div>
+        <div>
+          <input id="no" type="radio" name="button" value="no" checked>
+          <label for="no">No</label>
+        </div>
+      </fieldset>
+      <div>
+          <button>Generate</button>
+      </div>
+    </div>
+  </main>
 </body>
 </html>
