@@ -202,7 +202,9 @@
       <button id="continue" aria-live="assertive" hidden>Cancel</button>
   </div>
   <script>
+    
     var Alert;
+
     document.getElementById("continue").addEventListener("click", function() { Alert.close() });
     document.querySelector("button").addEventListener("click", function() {
       Alert = new AlertBoxOverlay(
@@ -213,6 +215,49 @@
         10
       );
     })
+
+    function AlertBoxOverlay(img, animate, text, button seconds) {
+      var message = this;
+      var alert = document.getElementById("alert-box");
+      var overlay = document.getElementById("overlay");
+      var continueButton = document.getElementById("continue");
+      var vizText = document.getElementById("visual-text");
+      var indefAnim = document.getElementById("indef-animation");
+      var audioAnnounce = document.getElementById("live-region");
+      var barDef = document.getElementById("bar-definite");
+      var spinDef = document.getElementById("spin-definite");
+      var isSpinner = (img === "spin");
+      var isIndefinite = (animate === "indefinite");
+      var hasButton = (button === "yes");
+      var counter = 0;
+
+      //to set interval & prevent set interval from executing function
+      var timedMessage = setInterval(setTime, 1000)
+
+      //initial text once alert wait message renders
+      if (text === "load") {
+        vizText.innerHTML = ("0% Loading...");
+      } else if (text === "untimed") {
+        vizText.innerHTML = "Please wait...";
+      } else {
+        vizText.innerHTML = seconds + " seconds";
+      }
+
+      //adds button to wait message
+      if (hasButton) continueButton.removeAttribute("hidden");
+
+      //renders the entire alert wait message box
+      overlay.className="overlay";
+      overlay.setAttribute("disabled", "");
+      alertBox.removeAttribute("hidden");
+
+      //syncs animation and time
+      function setTime() {
+        if (counter <= seconds) { 
+
+        }
+      }
+    }
   </script>
 </body>
 </html>
