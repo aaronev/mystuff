@@ -255,6 +255,38 @@
       function setTime() {
         if (counter <= seconds) { 
 
+          //for visual text message to be updated
+          var countDown = seconds-counter + " seconds";
+          var loadPercent = Math.round((counter/seconds)*100) + "% Loading..."
+          var pleaseWait = "Please wait...";
+
+          if (text === "load") {
+            vizText.innerHTML = loadPercent
+          } else if (text === "untimed") {
+            vizText.innerHTML = pleaseWait
+          } else {
+            vizText.innerHTML = countDown;
+          }
+
+          //for progress bar definite animation
+          barDef.style.width = (counter/seconds)*100 + "%";
+
+          //for spinner definite animation and live region
+          if (counter <= 0) {
+
+          }
+          if (counter === Math.round(seconds*.25)) {
+
+          }
+          if (counter === Math.round(seconds*.5)) {
+            
+          }
+          if (counter === Math.round(seconds*.75)) {
+            
+          }
+          if (counter >= seconds) {
+            
+          }
         }
       }
     }
