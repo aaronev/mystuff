@@ -16,7 +16,7 @@
     *,
     *:before,
     *:after {
-      box-sizing inherit;
+      box-sizing: inherit;
     }
 
     body {
@@ -55,7 +55,7 @@
       font-size: 1px;
       height: .5px;
       overflow: hidden;
-      position absolute;
+      position: absolute;
       white-space: nowrap;
       width: .5px;
     }
@@ -98,7 +98,7 @@
 
     #alert-box {
       width: 75%;
-      position fixed;
+      position: fixed;
       left: 50%;
       bottom: 50%;
       margin-left: -37.5%;
@@ -143,7 +143,7 @@
         </div>
         <div>
           <input id="bar" type="radio" name="image" value="bar">
-          <label for="bar">Spinner</label>
+          <label for="bar">Progress Bar</label>
         </div>
       </fieldset>
       <fieldset>
@@ -154,7 +154,7 @@
         </div>
         <div>
           <input id="definite" type="radio" name="animate" value="definite">
-          <label for="definite">Indefinite</label>
+          <label for="definite">Definite</label>
         </div>
       </fieldset>
       <fieldset>
@@ -193,8 +193,8 @@
           <div id="bar-definite" hidden></div>
         </div>
         <div role="timer">
-          <span id="visual-text" aria-hidden="true"></span>
-          <span id="live-region" class="visualy-hidden" aria-live="assertive"></span>
+          <div id="visual-text" aria-hidden="true"></div>
+          <div id="live-region" class="visually-hidden" aria-live="assertive"></div>
         </div>
         <button id="continue" aria-live="assertive" hidden>Cancel</button>
     </div>
@@ -208,90 +208,171 @@
     var Alert;
 
     document.getElementById("continue").addEventListener("click", function() { Alert.close() });
-    document.querySelector("button").addEventListener("click", function() {
+    document.getElementById("alert-box").addEventListener("keypress", function(e) {
+      if (e.key === "Escape") { Alert.close(); }
+    });
+    document.querySelector("button").addEventListener("click", function(e) {
+      e.preventDefault("submit");
       Alert = new AlertBoxOverlay(
         document.querySelector("input[name='image']:checked").value,
         document.querySelector("input[name='animate']:checked").value,
         document.querySelector("input[name='text']:checked").value,
         document.querySelector("input[name='button']:checked").value,
         10
-      );
-    })
+      ).render();
+    });
 
-    function AlertBoxOverlay(img, animate, text, button seconds) {
+    function AlertBoxOverlay(img, animate, text, button, seconds) {
       var message = this;
-      var alert = document.getElementById("alert-box");
+      var alertBox = document.getElementById("alert-box");
       var overlay = document.getElementById("overlay");
       var continueButton = document.getElementById("continue");
       var vizText = document.getElementById("visual-text");
       var indefAnim = document.getElementById("indef-animation");
+      var animationCon = document.getElementById("animation-container");
       var audioAnnounce = document.getElementById("live-region");
       var barDef = document.getElementById("bar-definite");
       var spinDef = document.getElementById("spin-definite");
-      var isSpinner = (img === "spin");
-      var isIndefinite = (animate === "indefinite");
       var hasButton = (button === "yes");
       var counter = 0;
 
-      //to set interval & prevent set interval from executing function
-      var timedMessage = setInterval(setTime, 1000)
+      //sets interval & prevent continuation
+      var timedMessage = setInterval(setTimedMessage, 1000)
 
-      //initial text once alert wait message renders
-      if (text === "load") {
-        vizText.innerHTML = ("0% Loading...");
-      } else if (text === "untimed") {
-        vizText.innerHTML = "Please wait...";
-      } else {
-        vizText.innerHTML = seconds + " seconds";
-      }
-
-      //adds button to wait message
-      if (hasButton) continueButton.removeAttribute("hidden");
-
-      //renders the entire alert wait message box
-      overlay.className="overlay";
-      overlay.setAttribute("disabled", "");
-      alertBox.removeAttribute("hidden");
-
-      //syncs animation and time
-      function setTime() {
-        if (counter <= seconds) { 
-
-          //for visual text message to be updated
-          var countDown = seconds-counter + " seconds";
-          var loadPercent = Math.round((counter/seconds)*100) + "% Loading..."
-          var pleaseWait = "Please wait...";
-
-          if (text === "load") {
-            vizText.innerHTML = loadPercent
-          } else if (text === "untimed") {
-            vizText.innerHTML = pleaseWait
-          } else {
-            vizText.innerHTML = countDown;
-          }
-
-          //for progress bar definite animation
-          barDef.style.width = (counter/seconds)*100 + "%";
-
-          //for spinner definite animation and live region
-          if (counter <= 0) {
-
-          }
-          if (counter === Math.round(seconds*.25)) {
-
-          }
-          if (counter === Math.round(seconds*.5)) {
-            
-          }
-          if (counter === Math.round(seconds*.75)) {
-            
-          }
-          if (counter >= seconds) {
-            
-          }
+      this.close = function(checkButton) {
+        clearInterval(timedMessage);
+        if (checkButton) { //hides animation and changes focus to button
+          animationCon.setAttribute("hidden", "");
+          //for IE to announce ok button
+          (isIE) 
+            ? setTimeout(function() {
+                continueButton.focus();
+              }, 250)
+            : continueButton.focus();
+        } else {
+          formDisabledSwitch("off");
+          animationCon.removeAttribute("hidden");
+          continueButton.setAttribute("hidden", "");
+          alertBox.setAttribute("hidden", "");
+          indefAnim.setAttribute("hidden", "");
+          barDef.setAttribute("hidden", "");
+          spinDef.setAttribute("hidden", "");
+          document.querySelector("button").focus();
         }
       }
-    }
+
+      this.render = function() {
+        //initiates chosen visual text & animation
+        chosenVisualTextContent();
+        indefAnim.className = img + "-indefinite";
+        (animate === "indefinite")
+          ? indefAnim.removeAttribute("hidden")
+          : (img === "spin")
+            ? spinDef.removeAttribute("hidden")
+            : barDef.removeAttribute("hidden");
+
+        //disables form and resets animation and button
+        formDisabledSwitch();
+        spinDef.style.borderColor = "rgba(0,0,0,0.34)";
+        barDef.style.width = "0%";
+        continueButton.innerHTML = "Cancel";
+
+        //renders entire alert wait message
+        alertBox.removeAttribute("hidden");
+
+        if (hasButton) {
+          if (isIE) { //for IE to announce cancel button
+            alertBox.setAttribute("role", "alert");
+            continueButton.removeAttribute("hidden");
+            setTimeout(function(){
+              continueButton.focus();
+            }, 250);
+          } else {
+            alertBox.setAttribute("role", "alertdialog");
+            continueButton.removeAttribute("hidden");
+            continueButton.focus();
+          }
+        } else {
+          alertBox.setAttribute("role", "alert");
+          alertBox.focus();
+        }
+
+        return message;
+      }
+
+      //============================================helpers==================================
+
+      //initiates and updates visual text
+      function chosenVisualTextContent() {
+        if (text === "load") {
+          vizText.innerHTML = Math.round((counter/seconds)*100) 
+          + "% loading...";
+        } else if (text === "timer") {
+          vizText.innerHTML = (seconds-counter) 
+          + " seconds remaining";
+        } else {
+          vizText.innerHTML = "Processing..."
+        }
+      }
+
+      //sets the time for animation and text
+      function setTimedMessage() {
+        if (counter <= seconds) {
+          chosenVisualTextContent();
+          syncLiveRegWithDefAnim();
+          counter++;
+        } else { message.close(hasButton); }
+      }
+
+      //disables form and all children elements
+      function formDisabledSwitch(off) {
+        Array.prototype.slice.call(overlay.children)
+        .forEach(function(el) {
+          if (!off) {
+            overlay.className = "overlay";
+            overlay.setAttribute("disabled", "");
+            el.setAttribute("disabled", "");
+          } else {
+            overlay.removeAttribute("class");
+            overlay.removeAttribute("disabled");
+            el.removeAttribute("disabled");
+          }
+        });
+      }
+
+      //syncs live region with definite animations
+      function syncLiveRegWithDefAnim() {
+        barDef.style.width = (counter/seconds)*100 + "%"
+        if ((counter <= 0 && !hasButton) && !isIE) {
+          audioAnnounce.innerHTML = vizText.innerText;
+        }
+        if (counter === Math.round(seconds*.25)) {
+          spinDef.style.borderLeftColor = "#DC143C";
+          audioAnnounce.innerHTML = vizText.innerText;
+        }
+        if (counter === Math.round(seconds*.5)) {
+          spinDef.style.borderTopColor = "#DC143C";
+        }
+        if (counter === Math.round(seconds*.75)) {
+          spinDef.style.borderRightColor = "#DC143C";
+          audioAnnounce.innerHTML = vizText.innerText;
+        }
+        if (counter === seconds) {
+          spinDef.style.borderBottomColor = "#DC143C";
+          continueButton.innerHTML = "OK";
+          vizText.innerHTML = "Action complete!";
+          audioAnnounce.innerHTML = vizText.innerText;
+          continueButton.blur();
+        }
+
+        //clears for IE to not repeat announced
+        if (isIE) { audioAnnounced.innerText = ""; }
+
+        setTimeout(function(){
+          audioAnnounce.innerHTML = "";
+        }, 250);
+      }
+    };
   </script>
 </body>
 </html>
