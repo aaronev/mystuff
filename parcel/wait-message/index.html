@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="IE=edge">
+  <title>Wait Message Examples</title>
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0m shrink-to-fit=no">
+  <style>
+    html {
+      background-size: cover;
+      box-sizing: border-box;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing inherit;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      line-height: 1.5;
+      margin: 1rem;
+    }
+
+    :focus {
+      outline: 0;
+      position: relative;
+    }
+
+    :focus:not(body):not(html):before {
+      box-shadow: 0 0 0 4px #fff;
+      bottom: 4px;
+      content: "";
+      left: 4px;
+      position: absolute;
+      right: 4px;
+      top: 4px;
+    }
+
+    :focus:not(body):not(html):before, 
+    select:focus, 
+    input:focus {
+      outline: 4px dotted #6da003;
+    }
+
+    ::-moz-focus-inner {
+      border: 0;
+    }
+
+    .visually-hidden {
+      clip: rect(0.063rem, 0.063rem, 0.063rem, 0.063rem);
+      font-size: 1px;
+      height: .5px;
+      overflow: hidden;
+      position absolute;
+      white-space: nowrap;
+      width: .5px;
+    }
+
+    .overlay {
+      opacity: .1;
+      background: #fff;
+    }
+
+    .spin-indefinite {
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      border: 10px solid #DC143C;
+      border-radius: 50%;
+      border-bottom-color: rgba(0,0,0,0.34);
+      animate: spin-indefinite 2s linear infinite;
+    }
+
+    .bar-indefinite {
+      width: 50%;
+      height: 20px;
+      background-color: #DC143C;
+      animation: bar-indefinite 1s alternate-reverse infinite;
+    }
+
+    #spin-definite {
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      border: 10px solid rgba(0,0,0,0.34);
+      border-radius: 50%;
+    }
+
+    #bar-definite {
+      width: 0%;
+      height: 20px;
+      background-color: #DC143C;
+    }
+
+    #alert-box {
+      width: 75%;
+      position fixed;
+      left: 50%;
+      bottom: 50%;
+      margin-left: -37.5%;
+      border: solid black 1px;
+      text-align: center;
+      padding: 2%;
+    }
+
+    #animation-container {
+      width: 80%;
+      border: solid black .1px;
+      background-color: rgba(0,0,0,0.34);
+      margin: 0 auto;
+    }
+
+    @keyframes spin-indefinite {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes bar-indefinite {
+      0% {
+        margin-left: 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="overlay">
+      <h1>Wait Message Example</h1>
+      <p>The following is a generator of a barebones Wait Message.</p>
+      <fieldset>
+        <legend>Select Image:</legend>
+        <div>
+          <input id="spin" type="radio" name="image" value="spin" checked>
+          <label for="spin">Spinner</label>
+        </div>
+        <div>
+          <input id="bar" type="radio" name="image" value="bar">
+          <label for="bar">Spinner</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Select Animation:</legend>
+        <div>
+          <input id="indefinite" type="radio" name="animate" value="indefinite" checked>
+          <label for="indefinite">Indefinite</label>
+        </div>
+        <div>
+          <input id="definite" type="radio" name="animate" value="definite">
+          <label for="definite">Indefinite</label>
+        </div>
+      </fieldset>
+            <fieldset>
+        <legend>Select Text:</legend>
+        <div>
+          <input id="timer" type="radio" name="text" value="timer" checked>
+          <label for="timer">Timer</label>
+        </div>
+        <div>
+          <input id="load" type="radio" name="text" value="load">
+          <label for="load">Loading</label>
+        </div>
+        <div>
+          <input id="untimed" type="radio" name="text" value="untimed">
+          <label for="untimed">Please Wait (Untimed)</label>
+        </div>
+      </fieldset>
+            <fieldset>
+        <legend>Button (Optional):</legend>
+        <div>
+          <input id="yes" type="radio" name="button" value="yes">
+          <label for="yes">Yes</label>
+        </div>
+        <div>
+          <input id="no" type="radio" name="button" value="no" checked>
+          <label for="no">No</label>
+        </div>
+      </fieldset>
+      <div>
+          <button>Generate</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="alert-box" tabindex="0" role="alert" hidden>
+      <div id="animation-container">
+        <div id="indef-animation" hidden></div>
+        <div id="spin-definite" hidden></div>
+        <div id="bar-definite" hidden></div>
+      </div>
+      <div role="timer">
+        <span id="visual-text" aria-hidden="true"></span>
+        <span id="live-region" class="visualy-hidden" aria-live="assertive"></span>
+      </div>
+      <button id="continue" aria-live="assertive" hidden>Cancel</button>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>

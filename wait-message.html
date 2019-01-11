@@ -72,7 +72,7 @@
       border: 10px solid #DC143C;
       border-radius: 50%;
       border-bottom-color: rgba(0,0,0,0.34);
-      animate: spin-indefinite 2s linear infinite;
+      animation: spin-indefinite 2s linear infinite;
     }
 
     .bar-indefinite {
@@ -132,7 +132,7 @@
 </head>
 <body>
   <main>
-    <div id="overlay">
+    <form id="overlay">
       <h1>Wait Message Example</h1>
       <p>The following is a generator of a barebones Wait Message.</p>
       <fieldset>
@@ -157,7 +157,7 @@
           <label for="definite">Indefinite</label>
         </div>
       </fieldset>
-            <fieldset>
+      <fieldset>
         <legend>Select Text:</legend>
         <div>
           <input id="timer" type="radio" name="text" value="timer" checked>
@@ -172,7 +172,7 @@
           <label for="untimed">Please Wait (Untimed)</label>
         </div>
       </fieldset>
-            <fieldset>
+      <fieldset>
         <legend>Button (Optional):</legend>
         <div>
           <input id="yes" type="radio" name="button" value="yes">
@@ -183,26 +183,28 @@
           <label for="no">No</label>
         </div>
       </fieldset>
-      <div>
-          <button>Generate</button>
-      </div>
+      <button>Generate</button>
+    </form>
+  
+    <div id="alert-box" tabindex="0" role="alert" hidden>
+        <div id="animation-container">
+          <div id="indef-animation" hidden></div>
+          <div id="spin-definite" hidden></div>
+          <div id="bar-definite" hidden></div>
+        </div>
+        <div role="timer">
+          <span id="visual-text" aria-hidden="true"></span>
+          <span id="live-region" class="visualy-hidden" aria-live="assertive"></span>
+        </div>
+        <button id="continue" aria-live="assertive" hidden>Cancel</button>
     </div>
-  </main>
 
-  <div id="alert-box" tabindex="0" role="alert" hidden>
-      <div id="animation-container">
-        <div id="indef-animation" hidden></div>
-        <div id="spin-definite" hidden></div>
-        <div id="bar-definite" hidden></div>
-      </div>
-      <div role="timer">
-        <span id="visual-text" aria-hidden="true"></span>
-        <span id="live-region" class="visualy-hidden" aria-live="assertive"></span>
-      </div>
-      <button id="continue" aria-live="assertive" hidden>Cancel</button>
-  </div>
+  </main>
   <script>
     
+    //Internet Explorer 6-11
+    var isIE = /*@cc_on!*/false || !!document.documentMode;
+
     var Alert;
 
     document.getElementById("continue").addEventListener("click", function() { Alert.close() });
