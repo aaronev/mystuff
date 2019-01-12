@@ -60,11 +60,6 @@
       width: .5px;
     }
 
-    .overlay {
-      opacity: .1;
-      background: #fff;
-    }
-
     .spin-indefinite {
       margin: 0 auto;
       width: 100px;
@@ -96,7 +91,12 @@
       background-color: #DC143C;
     }
 
-    .alert-box {
+    .overlay {
+      opacity: .1;
+      background: #fff;
+    }
+
+    #alert-box {
       width: 75%;
       position: fixed;
       left: 50%;
@@ -107,7 +107,7 @@
       padding: 2%;
     }
 
-    .animation-container {
+    #animation-container {
       width: 80%;
       border: solid black .1px;
       background-color: rgba(0,0,0,0.34);
@@ -128,6 +128,7 @@
         margin-left: 50%;
       }
     }
+
   </style>
 </head>
 <body>
@@ -175,42 +176,91 @@
       <fieldset>
         <legend>Button (Optional):</legend>
         <div>
-          <input id="yes" type="radio" name="button" value="yes">
+          <input id="yes" type="radio" name="button" value="true">
           <label for="yes">Yes</label>
         </div>
         <div>
-          <input id="no" type="radio" name="button" value="no" checked>
+          <input id="no" type="radio" name="button" value="false" checked>
           <label for="no">No</label>
         </div>
       </fieldset>
       <button>Generate</button>
     </form>
     
-    <div id="alert-only" class="alert-box" role="alert" tabindex="0" hidden>
-        <div class="animation-container">
-          <div class="spin-indefinite" hidden></div>
-          <div class="bar-indefinite" hidden></div>
-          <div class="spin-definite" hidden></div>
-          <div class="bar-definite" hidden></div>
+    <div id="alert-box" class="close" role="alert" tabindex="0" hidden>
+        <div id="animation-container" hidden>
+          <div id="animation"></div>
         </div>
-        <div class="visual-text" aria-hidden="true"></div>
-        <div class="live-region visually-hidden" aria-live="assertive"></div>
-    </div>
-
-    <div id="alert-dialog" class="alert-box" role="alertdialog" tabindex="0" hidden>
-        <div class="animation-container">
-          <div class="spin-indefinite" hidden></div>
-          <div class="bar-indefinite" hidden></div>
-          <div class="spin-definite" hidden></div>
-          <div class="bar-definite" hidden></div>
+        <div id="visual-text" aria-hidden="true"></div>
+        <div id="live-region" class="visually-hidden"></div>
+        <div role="alert-dialog" tabindex="0">
+          <button id="continue" class="close" hidden>Cancel</button>
         </div>
-        <div class="visual-text" aria-hidden="true"></div>
-        <div class="live-region" class="visually-hidden" aria-live="assertive"></div>
-        <button id="continue" hidden>Cancel</button>
     </div>
 
   </main>
   <script>
+
+    var waitMessage;
+
+    document.querySelector("#continue").addEventListener("click", function(e) {
+        waitMessage.close();
+    })
+
+    document.querySelector("#alert-box").addEventListener("keypress", function(e) {
+      if (e.key === "Escape") { 
+        console.log("adsfjlk;asdjfkl;a");
+        waitMessage.close(); 
+      }
+    })
+
+    document.querySelector("button").addEventListener("click", function(e) {
+      e.preventDefault("submit");
+      waitMessage = new Alert(
+        document.querySelector("input[name='image']:checked").value,
+        document.querySelector("input[name='animate']:checked").value,
+        document.querySelector("input[name='text']:checked").value,
+        document.querySelector("input[name='button']:checked").value,
+        10
+        ).open();
+    });
+
+    function Alert(img, anim, text, btn, time) {
+      var thisMessage = this;
+      var overlay = document.getElementById("overlay");
+      var alertBox = document.getElementById("alert-box");
+      var animationCon = document.getElementById("animation-container");
+      var animation = document.getElementById("animation");
+      var vizText = document.getElementById("visual-text");
+      var liveReg = document.getElementById("live-region");
+      var continueBtn = document.getElementById("continue");
+      var btn = (btn === "true")
+
+      this.open = function() {
+        overlay.setAttribute("class","overlay");
+        alertBox.removeAttribute("hidden");
+        animationCon.removeAttribute("hidden");
+        animation.setAttribute("class", img + "-" + anim);
+        (btn) 
+          ? continueBtn.removeAttribute("hidden") 
+          : alertBox.focus()
+        continueBtn.focus()
+        return thisMessage;
+      }
+
+      this.close = function(button) {
+        animationCon.setAttribute("hidden", "");
+        if (button) {
+          continueBtn.focus() 
+        } else {
+          continueBtn.setAttribute("hidden", "");
+          overlay.removeAttribute("class");
+          alertBox.setAttribute("hidden", "");
+        }
+      }
+    }
+
+
 
   </script>
 </body>
