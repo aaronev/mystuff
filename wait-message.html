@@ -82,7 +82,7 @@
       animation: bar-indefinite 1s alternate-reverse infinite;
     }
 
-    #spin-definite {
+    .spin-definite {
       margin: 0 auto;
       width: 100px;
       height: 100px;
@@ -90,13 +90,13 @@
       border-radius: 50%;
     }
 
-    #bar-definite {
+    .bar-definite {
       width: 0%;
       height: 20px;
       background-color: #DC143C;
     }
 
-    #alert-box {
+    .alert-box {
       width: 75%;
       position: fixed;
       left: 50%;
@@ -107,7 +107,7 @@
       padding: 2%;
     }
 
-    #animation-container {
+    .animation-container {
       width: 80%;
       border: solid black .1px;
       background-color: rgba(0,0,0,0.34);
@@ -185,194 +185,33 @@
       </fieldset>
       <button>Generate</button>
     </form>
-  
-    <div id="alert-box" tabindex="0" role="alert" hidden>
-        <div id="animation-container">
-          <div id="indef-animation" hidden></div>
-          <div id="spin-definite" hidden></div>
-          <div id="bar-definite" hidden></div>
+    
+    <div id="alert-only" class="alert-box" role="alert" tabindex="0" hidden>
+        <div class="animation-container">
+          <div class="spin-indefinite" hidden></div>
+          <div class="bar-indefinite" hidden></div>
+          <div class="spin-definite" hidden></div>
+          <div class="bar-definite" hidden></div>
         </div>
-        <div role="timer">
-          <div id="visual-text" aria-hidden="true"></div>
-          <div id="live-region" class="visually-hidden" aria-live="assertive"></div>
+        <div class="visual-text" aria-hidden="true"></div>
+        <div class="live-region visually-hidden" aria-live="assertive"></div>
+    </div>
+
+    <div id="alert-dialog" class="alert-box" role="alertdialog" tabindex="0" hidden>
+        <div class="animation-container">
+          <div class="spin-indefinite" hidden></div>
+          <div class="bar-indefinite" hidden></div>
+          <div class="spin-definite" hidden></div>
+          <div class="bar-definite" hidden></div>
         </div>
-        <button id="continue" aria-live="assertive" hidden>Cancel</button>
+        <div class="visual-text" aria-hidden="true"></div>
+        <div class="live-region" class="visually-hidden" aria-live="assertive"></div>
+        <button id="continue" hidden>Cancel</button>
     </div>
 
   </main>
   <script>
-    
-    //Internet Explorer 6-11
-    var isIE = /*@cc_on!*/false || !!document.documentMode;
 
-    var Alert;
-
-    document.getElementById("continue").addEventListener("click", function() { Alert.close() });
-    document.getElementById("alert-box").addEventListener("keypress", function(e) {
-      if (e.key === "Escape") { Alert.close(); }
-    });
-    document.querySelector("button").addEventListener("click", function(e) {
-      e.preventDefault("submit");
-      Alert = new AlertBoxOverlay(
-        document.querySelector("input[name='image']:checked").value,
-        document.querySelector("input[name='animate']:checked").value,
-        document.querySelector("input[name='text']:checked").value,
-        document.querySelector("input[name='button']:checked").value,
-        10
-      ).render();
-    });
-
-    function AlertBoxOverlay(img, animate, text, button, seconds) {
-      var message = this;
-      var alertBox = document.getElementById("alert-box");
-      var overlay = document.getElementById("overlay");
-      var continueButton = document.getElementById("continue");
-      var vizText = document.getElementById("visual-text");
-      var indefAnim = document.getElementById("indef-animation");
-      var animationCon = document.getElementById("animation-container");
-      var audioAnnounce = document.getElementById("live-region");
-      var barDef = document.getElementById("bar-definite");
-      var spinDef = document.getElementById("spin-definite");
-      var hasButton = (button === "yes");
-      var counter = 0;
-
-      //sets interval & prevent continuation
-      var timedMessage = setInterval(setTimedMessage, 1000)
-
-      this.close = function(checkButton) {
-        clearInterval(timedMessage);
-        if (checkButton) { //hides animation and changes focus to button
-          animationCon.setAttribute("hidden", "");
-          //for IE to announce ok button
-          (isIE) 
-            ? setTimeout(function() {
-                continueButton.focus();
-              }, 250)
-            : continueButton.focus();
-        } else {
-          formDisabledSwitch("off");
-          animationCon.removeAttribute("hidden");
-          continueButton.setAttribute("hidden", "");
-          alertBox.setAttribute("hidden", "");
-          indefAnim.setAttribute("hidden", "");
-          barDef.setAttribute("hidden", "");
-          spinDef.setAttribute("hidden", "");
-          document.querySelector("button").focus();
-        }
-      }
-
-      this.render = function() {
-        //initiates chosen visual text & animation
-        chosenVisualTextContent();
-        indefAnim.className = img + "-indefinite";
-        (animate === "indefinite")
-          ? indefAnim.removeAttribute("hidden")
-          : (img === "spin")
-            ? spinDef.removeAttribute("hidden")
-            : barDef.removeAttribute("hidden");
-
-        //disables form and resets animation and button
-        formDisabledSwitch();
-        spinDef.style.borderColor = "rgba(0,0,0,0.34)";
-        barDef.style.width = "0%";
-        continueButton.innerHTML = "Cancel";
-
-        //renders entire alert wait message
-        alertBox.removeAttribute("hidden");
-
-        if (hasButton) {
-          if (isIE) { //for IE to announce cancel button
-            alertBox.setAttribute("role", "alert");
-            continueButton.removeAttribute("hidden");
-            setTimeout(function(){
-              continueButton.focus();
-            }, 250);
-          } else {
-            alertBox.setAttribute("role", "alertdialog");
-            continueButton.removeAttribute("hidden");
-            continueButton.focus();
-          }
-        } else {
-          alertBox.setAttribute("role", "alert");
-          alertBox.focus();
-        }
-
-        return message;
-      }
-
-      //============================================helpers==================================
-
-      //initiates and updates visual text
-      function chosenVisualTextContent() {
-        if (text === "load") {
-          vizText.innerHTML = Math.round((counter/seconds)*100) 
-          + "% loading...";
-        } else if (text === "timer") {
-          vizText.innerHTML = (seconds-counter) 
-          + " seconds remaining";
-        } else {
-          vizText.innerHTML = "Processing..."
-        }
-      }
-
-      //sets the time for animation and text
-      function setTimedMessage() {
-        if (counter <= seconds) {
-          chosenVisualTextContent();
-          syncLiveRegWithDefAnim();
-          counter++;
-        } else { message.close(hasButton); }
-      }
-
-      //disables form and all children elements
-      function formDisabledSwitch(off) {
-        Array.prototype.slice.call(overlay.children)
-        .forEach(function(el) {
-          if (!off) {
-            overlay.className = "overlay";
-            overlay.setAttribute("disabled", "");
-            el.setAttribute("disabled", "");
-          } else {
-            overlay.removeAttribute("class");
-            overlay.removeAttribute("disabled");
-            el.removeAttribute("disabled");
-          }
-        });
-      }
-
-      //syncs live region with definite animations
-      function syncLiveRegWithDefAnim() {
-        barDef.style.width = (counter/seconds)*100 + "%"
-        if ((counter <= 0 && !hasButton) && !isIE) {
-          audioAnnounce.innerHTML = vizText.innerText;
-        }
-        if (counter === Math.round(seconds*.25)) {
-          spinDef.style.borderLeftColor = "#DC143C";
-          audioAnnounce.innerHTML = vizText.innerText;
-        }
-        if (counter === Math.round(seconds*.5)) {
-          spinDef.style.borderTopColor = "#DC143C";
-        }
-        if (counter === Math.round(seconds*.75)) {
-          spinDef.style.borderRightColor = "#DC143C";
-          audioAnnounce.innerHTML = vizText.innerText;
-        }
-        if (counter === seconds) {
-          spinDef.style.borderBottomColor = "#DC143C";
-          continueButton.innerHTML = "OK";
-          vizText.innerHTML = "Action complete!";
-          audioAnnounce.innerHTML = vizText.innerText;
-          continueButton.blur();
-        }
-
-        //clears for IE to not repeat announced
-        if (isIE) { audioAnnounced.innerText = ""; }
-
-        setTimeout(function(){
-          audioAnnounce.innerHTML = "";
-        }, 250);
-      }
-    };
   </script>
 </body>
 </html>
