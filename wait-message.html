@@ -200,7 +200,7 @@
 
   </main>
   <script>
-
+    
     var waitMessage;
 
     document.querySelector("#continue").addEventListener("click", function(e) {
@@ -208,15 +208,12 @@
     })
 
     document.querySelector("#alert-box").addEventListener("keypress", function(e) {
-      if (e.key === "Escape") { 
-        console.log("adsfjlk;asdjfkl;a");
-        waitMessage.close(); 
-      }
+      if (e.key === "Escape") { waitMessage.close(); }
     })
 
     document.querySelector("button").addEventListener("click", function(e) {
       e.preventDefault("submit");
-      waitMessage = new Alert(
+      waitMessage = new AlertWaitMessage(
         document.querySelector("input[name='image']:checked").value,
         document.querySelector("input[name='animate']:checked").value,
         document.querySelector("input[name='text']:checked").value,
@@ -225,8 +222,7 @@
         ).open();
     });
 
-    function Alert(img, anim, text, btn, time) {
-      var thisMessage = this;
+    function AlertWaitMessage(img, anim, text, btn, time) {
       var overlay = document.getElementById("overlay");
       var alertBox = document.getElementById("alert-box");
       var animationCon = document.getElementById("animation-container");
@@ -234,33 +230,103 @@
       var vizText = document.getElementById("visual-text");
       var liveReg = document.getElementById("live-region");
       var continueBtn = document.getElementById("continue");
-      var btn = (btn === "true")
+      var quarter = Math.round(time*.25);
+      var half = Math.round(time*.5);
+      var thrQrts = Math.round(time*.75);
+      var thisMessage = this;
+      var btn = (btn === "true");
+      var counter = 0;
+
+      var timedMessage = setInterval(function() {
+        if (counter <= time) {
+          updateVisualTextContent();
+          updateLiveRegionAnnounce();
+          updateDefiniteAnimation();
+          counter++
+        } else { thisMessage.close(btn); }
+      }, 1000)
 
       this.open = function() {
+        updateVisualTextContent();
+        formAccess("off");
         overlay.setAttribute("class","overlay");
+        overlay.setAttribute("disabled", "");
         alertBox.removeAttribute("hidden");
         animationCon.removeAttribute("hidden");
         animation.setAttribute("class", img + "-" + anim);
         (btn) 
           ? continueBtn.removeAttribute("hidden") 
-          : alertBox.focus()
-        continueBtn.focus()
+          : alertBox.focus();
+        continueBtn.focus();
+        timedMessage = setInterval(setTimedMessage, 1000)
         return thisMessage;
       }
 
       this.close = function(button) {
+        clearInterval(timedMessage);
         animationCon.setAttribute("hidden", "");
         if (button) {
-          continueBtn.focus() 
+          continueBtn.focus(); 
         } else {
+          formAcess();
           continueBtn.setAttribute("hidden", "");
           overlay.removeAttribute("class");
+          overlay.removeAttribute("disabled");
           alertBox.setAttribute("hidden", "");
         }
       }
+
+      function formAccess(off) {
+        Array.prototype.slice.call(overlay.children)
+        .forEach(function(el){
+          (off)
+            ? el.setAttribute("disabled", "")
+            : el.removeAttribute("disabled");
+        });
+      }
+
+      function updateLiveRegionAnnounce() {
+        [quarter, half, time]
+        .forEach(function(el) {
+          if (counter === el) {
+            liveReg.innerHTML = vizText.innerText;
+          }
+        });
+      }
+
+      function updateVisualTextContent() {
+        if (text === "load") {
+          vizText.innerHTML = Math.round((counter/time)*100)
+          + "% loading...";
+        } else if (text === "timer") {
+          vizText.innerHTML = (time-counter)
+          + " seconds remaining";
+        } else if (text === "untimed") {
+          vizText.innerHTML = "Processing";
+        } else {
+          vizText.innerHTML = "Action complete!";
+        }
+      }
+
+      function updateDefiniteAnimation() { 
+        var spin = document.querySelector(".spin-definite");
+        var bar = document.querySelector(".bar-definite");
+
+        if (bar) {
+          bar.style.width = (counter/time)*100 + "%";
+        } else if (spin) {
+          if (counter >= quarter) {
+            spin.style.borderLeftColor = "#DC143C";
+          } else if (counter >= half) {
+            spin.style.borderTopColor = "#DC143C";
+          } else if (counter >= thrQrts) {
+            spin.style.borderRightColor = "#DC143C";
+          } else {
+            spin.style.borderBottomColor = "#DC143C";
+          }
+        }
+      }
     }
-
-
 
   </script>
 </body>
