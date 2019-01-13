@@ -194,7 +194,7 @@
         <div id="visual-text" aria-hidden="true"></div>
         <div id="live-region" class="visually-hidden"></div>
         <div role="alert-dialog" tabindex="0">
-          <button id="continue" class="close" hidden>Cancel</button>
+          <button id="continue" class="close" hidden></button>
         </div>
     </div>
 
@@ -237,15 +237,6 @@
       var btn = (btn === "true");
       var counter = 0;
 
-      var timedMessage = setInterval(function() {
-        if (counter <= time) {
-          updateVisualTextContent();
-          updateLiveRegionAnnounce();
-          updateDefiniteAnimation();
-          counter++
-        } else { thisMessage.close(btn); }
-      }, 1000)
-
       this.open = function() {
         updateVisualTextContent();
         formAccess("off");
@@ -257,8 +248,8 @@
         (btn) 
           ? continueBtn.removeAttribute("hidden") 
           : alertBox.focus();
+        continueBtn.innerHTML = "Cancel";
         continueBtn.focus();
-        timedMessage = setInterval(setTimedMessage, 1000)
         return thisMessage;
       }
 
@@ -266,15 +257,26 @@
         clearInterval(timedMessage);
         animationCon.setAttribute("hidden", "");
         if (button) {
+          continueBtn.innerHTML = "OK";
           continueBtn.focus(); 
         } else {
-          formAcess();
+          formAccess();
           continueBtn.setAttribute("hidden", "");
           overlay.removeAttribute("class");
           overlay.removeAttribute("disabled");
           alertBox.setAttribute("hidden", "");
+          document.querySelector("button").focus();
         }
       }
+
+      var timedMessage = setInterval(function() {
+        if (counter <= time) {
+          updateVisualTextContent();
+          updateLiveRegionAnnounce();
+          updateDefiniteAnimation();
+          counter++
+        } else { thisMessage.close(btn); }
+      }, 1000)
 
       function formAccess(off) {
         Array.prototype.slice.call(overlay.children)
@@ -292,20 +294,27 @@
             liveReg.innerHTML = vizText.innerText;
           }
         });
+
+        setTimeout(function() {
+          liveReg.innerHTML = "";
+        }, 250);
       }
 
       function updateVisualTextContent() {
-        if (text === "load") {
+        var seconds = (time - counter > 1)
+          ? " seconds remaining"
+          : " second remaining";
+
+        if (counter >= time) {
+          vizText.innerHTML = "Action complete!";
+        } else if (text === "load") {
           vizText.innerHTML = Math.round((counter/time)*100)
           + "% loading...";
         } else if (text === "timer") {
-          vizText.innerHTML = (time-counter)
-          + " seconds remaining";
-        } else if (text === "untimed") {
-          vizText.innerHTML = "Processing";
+          vizText.innerHTML = (time-counter) + seconds;
         } else {
-          vizText.innerHTML = "Action complete!";
-        }
+          vizText.innerHTML = "Processing...";
+        } 
       }
 
       function updateDefiniteAnimation() { 
@@ -314,17 +323,27 @@
 
         if (bar) {
           bar.style.width = (counter/time)*100 + "%";
-        } else if (spin) {
-          if (counter >= quarter) {
-            spin.style.borderLeftColor = "#DC143C";
-          } else if (counter >= half) {
-            spin.style.borderTopColor = "#DC143C";
-          } else if (counter >= thrQrts) {
-            spin.style.borderRightColor = "#DC143C";
-          } else {
-            spin.style.borderBottomColor = "#DC143C";
+          if (counter >= time) {
+            setTimeout(function() {
+              bar.style.width = "0%";
+            }, 1000);
           }
-        }
+        } 
+
+        if (spin) {
+          if (counter === quarter) {
+            spin.style.borderLeftColor = "#DC143C";
+          } else if (counter === half) {
+            spin.style.borderTopColor = "#DC143C";
+          } else if (counter === thrQrts) {
+            spin.style.borderRightColor = "#DC143C";
+          } else if (counter >= time) {
+            spin.style.borderBottomColor = "#DC143C";
+            setTimeout(function() {
+              spin.style.borderColor = "rgba(0,0,0,0.34)";
+            }, 1000);
+          }
+        } 
       }
     }
 
