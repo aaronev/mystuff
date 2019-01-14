@@ -186,19 +186,17 @@
       </fieldset>
       <button>Generate</button>
     </form>
-    
-    <div id="alert-box" class="close" role="alert" tabindex="0" hidden>
-        <div id="animation-container" hidden>
-          <div id="animation"></div>
-        </div>
-        <div id="visual-text" aria-hidden="true"></div>
-        <div id="live-region" class="visually-hidden"></div>
-        <div role="alert-dialog" tabindex="0">
-          <button id="continue" class="close" hidden></button>
-        </div>
-    </div>
-
   </main>
+
+  <div id="alert-box" class="close" role="alertdialog" tabindex="0" hidden>
+      <div id="animation-container" hidden>
+        <div id="animation"></div>
+      </div>
+      <div id="visual-text" aria-hidden="true"></div>
+      <div id="live-region" class="visually-hidden"></div>
+      <button id="continue" hidden></button>
+  </div>
+
   <script>
     
     var waitMessage;
@@ -257,8 +255,11 @@
         clearInterval(timedMessage);
         animationCon.setAttribute("hidden", "");
         if (button) {
+          continueBtn.blur();
           continueBtn.innerHTML = "OK";
-          continueBtn.focus(); 
+          setTimeout(function(){
+            continueBtn.focus(); 
+          }, 250);
         } else {
           formAccess();
           continueBtn.setAttribute("hidden", "");
@@ -270,13 +271,13 @@
       }
 
       var timedMessage = setInterval(function() {
-        if (counter <= time) {
-          updateVisualTextContent();
-          updateLiveRegionAnnounce();
-          updateDefiniteAnimation();
-          counter++
-        } else { thisMessage.close(btn); }
-      }, 1000)
+          if (counter <= time) {
+            updateVisualTextContent();
+            updateLiveRegionAnnounce();
+            updateDefiniteAnimation();
+            counter++
+          } else { thisMessage.close(btn); }
+        }, 1000) 
 
       function formAccess(off) {
         Array.prototype.slice.call(overlay.children)
@@ -288,8 +289,11 @@
       }
 
       function updateLiveRegionAnnounce() {
-        [quarter, half, time]
-        .forEach(function(el) {
+        var intervals = [0, quarter, thrQrts, time]
+        
+        if (btn) { intervals.shift() }
+
+        interval.forEach(function(el) {
           if (counter === el) {
             liveReg.innerHTML = vizText.innerText;
           }
