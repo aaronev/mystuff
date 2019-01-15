@@ -60,6 +60,11 @@
       width: .5px;
     }
 
+    .overlay {
+      opacity: .1;
+      background: #fff;
+    }
+
     .spin-indefinite {
       margin: 0 auto;
       width: 100px;
@@ -89,11 +94,6 @@
       width: 0%;
       height: 20px;
       background-color: #DC143C;
-    }
-
-    .overlay {
-      opacity: .1;
-      background: #fff;
     }
 
     #alert-box {
@@ -188,26 +188,24 @@
     </form>
   </main>
 
-  <div id="alert-box" class="close" role="alertdialog" tabindex="0" hidden>
-      <div id="animation-container" hidden>
-        <div id="animation"></div>
-      </div>
-      <div id="visual-text" aria-hidden="true"></div>
-      <div id="live-region" class="visually-hidden"></div>
-      <button id="continue" hidden></button>
+  <div id="alert-box" tabindex="0" hidden>
+    <div id="animation-container" hidden></div>
+    <div id="visual-text" aria-hidden="true"></div>
+    <div id="live-region" class="visually-hidden"></div>
+    <button id="continue" hidden></button>
   </div>
 
   <script>
     
     var waitMessage;
 
-    document.querySelector("#continue").addEventListener("click", function(e) {
+    document.querySelector("#continue").addEventListener("click", function() {
         waitMessage.close();
-    })
+    });
 
     document.querySelector("#alert-box").addEventListener("keypress", function(e) {
       if (e.key === "Escape") { waitMessage.close(); }
-    })
+    });
 
     document.querySelector("button").addEventListener("click", function(e) {
       e.preventDefault("submit");
@@ -223,8 +221,7 @@
     function AlertWaitMessage(img, anim, text, btn, time) {
       var overlay = document.getElementById("overlay");
       var alertBox = document.getElementById("alert-box");
-      var animationCon = document.getElementById("animation-container");
-      var animation = document.getElementById("animation");
+      var animation = document.getElementById("animation-container");
       var vizText = document.getElementById("visual-text");
       var liveReg = document.getElementById("live-region");
       var continueBtn = document.getElementById("continue");
@@ -235,25 +232,40 @@
       var btn = (btn === "true");
       var counter = 0;
 
+      var timedMessage = setInterval(function() {
+          if (counter <= time) {
+            updateVisualTextContent();
+            updateLiveRegionAnnounce();
+            updateDefiniteAnimation();
+            counter++;
+          } else { thisMessage.close(btn); }
+        }, 1000);
+      
       this.open = function() {
         updateVisualTextContent();
         formAccess("off");
         overlay.setAttribute("class","overlay");
         overlay.setAttribute("disabled", "");
         alertBox.removeAttribute("hidden");
-        animationCon.removeAttribute("hidden");
-        animation.setAttribute("class", img + "-" + anim);
-        (btn) 
-          ? continueBtn.removeAttribute("hidden") 
-          : alertBox.focus();
-        continueBtn.innerHTML = "Cancel";
-        continueBtn.focus();
+        animation.removeAttribute("hidden");
+        var animate = document.createElement("DIV");
+        animate.setAttribute("class", img + "-" + anim);
+        animation.appendChild(animate);
+        if (btn) {
+          alertBox.setAttribute("role", "alertdialog");
+          continueBtn.innerHTML = "Cancel";
+          continueBtn.removeAttribute("hidden");
+          continueBtn.focus();
+        } else {
+          alertBox.setAttribute("role", "alert");
+          alertBox.focus();
+        }
         return thisMessage;
-      }
+      };
 
       this.close = function(button) {
         clearInterval(timedMessage);
-        animationCon.setAttribute("hidden", "");
+        animation.setAttribute("hidden", "");
         if (button) {
           continueBtn.blur();
           continueBtn.innerHTML = "OK";
@@ -262,22 +274,15 @@
           }, 250);
         } else {
           formAccess();
+          animation.removeChild(animation.childNodes[0]);
           continueBtn.setAttribute("hidden", "");
           overlay.removeAttribute("class");
           overlay.removeAttribute("disabled");
+          alertBox.removeAttribute("role");
           alertBox.setAttribute("hidden", "");
           document.querySelector("button").focus();
         }
-      }
-
-      var timedMessage = setInterval(function() {
-          if (counter <= time) {
-            updateVisualTextContent();
-            updateLiveRegionAnnounce();
-            updateDefiniteAnimation();
-            counter++
-          } else { thisMessage.close(btn); }
-        }, 1000) 
+      };
 
       function formAccess(off) {
         Array.prototype.slice.call(overlay.children)
@@ -286,23 +291,20 @@
             ? el.setAttribute("disabled", "")
             : el.removeAttribute("disabled");
         });
-      }
+      };
 
       function updateLiveRegionAnnounce() {
         var intervals = [0, quarter, thrQrts, time]
-        
-        if (btn) { intervals.shift() }
-
-        interval.forEach(function(el) {
+        if (btn) { intervals.shift(); }
+        intervals.forEach(function(el) {
           if (counter === el) {
             liveReg.innerHTML = vizText.innerText;
           }
         });
-
         setTimeout(function() {
           liveReg.innerHTML = "";
         }, 250);
-      }
+      };
 
       function updateVisualTextContent() {
         var seconds = (time - counter > 1)
@@ -319,22 +321,14 @@
         } else {
           vizText.innerHTML = "Processing...";
         } 
-      }
+      };
 
       function updateDefiniteAnimation() { 
         var spin = document.querySelector(".spin-definite");
         var bar = document.querySelector(".bar-definite");
-
         if (bar) {
           bar.style.width = (counter/time)*100 + "%";
-          if (counter >= time) {
-            setTimeout(function() {
-              bar.style.width = "0%";
-            }, 1000);
-          }
-        } 
-
-        if (spin) {
+        } else if (spin) {
           if (counter === quarter) {
             spin.style.borderLeftColor = "#DC143C";
           } else if (counter === half) {
@@ -343,13 +337,10 @@
             spin.style.borderRightColor = "#DC143C";
           } else if (counter >= time) {
             spin.style.borderBottomColor = "#DC143C";
-            setTimeout(function() {
-              spin.style.borderColor = "rgba(0,0,0,0.34)";
-            }, 1000);
           }
-        } 
-      }
-    }
+        };
+      };
+    };
 
   </script>
 </body>
