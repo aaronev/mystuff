@@ -96,7 +96,7 @@
       background-color: #DC143C;
     }
 
-    #alert-box {
+    .alert-box {
       width: 75%;
       position: fixed;
       left: 50%;
@@ -188,19 +188,27 @@
     </form>
   </main>
 
-  <div id="alert-box" tabindex="0" hidden>
-    <div id="animation-container" hidden></div>
+  <div id="alert-box" class="alert-box" tabindex="0" hidden>
+    <div id="animation-container"></div>
     <div id="visual-text" aria-hidden="true"></div>
     <div id="live-region" class="visually-hidden"></div>
-    <button id="continue" hidden></button>
+    <button id="cancel-btn" class="continue" hidden>Cancel</button>
+  </div>
+
+  <div id="alert-ok" class="alert-box" role="alertdialog" tabindex="0" hidden>
+    <div>Action complete!</div>
+    <button id="ok-btn" class="continue">OK</button>
   </div>
 
   <script>
     
     var waitMessage;
 
-    document.querySelector("#continue").addEventListener("click", function() {
+    Array.prototype.slice.call(document.querySelectorAll(".continue"))
+    .forEach(function(btn) {
+      btn.addEventListener("click", function() {
         waitMessage.close();
+      });
     });
 
     document.querySelector("#alert-box").addEventListener("keypress", function(e) {
@@ -224,7 +232,9 @@
       var animation = document.getElementById("animation-container");
       var vizText = document.getElementById("visual-text");
       var liveReg = document.getElementById("live-region");
-      var continueBtn = document.getElementById("continue");
+      var cancelBtn = document.getElementById("cancel-btn");
+      var okBox = document.getElementById("alert-ok");
+      var okBtn = document.getElementById("ok-btn");
       var quarter = Math.round(time*.25);
       var half = Math.round(time*.5);
       var thrQrts = Math.round(time*.75);
@@ -240,22 +250,20 @@
             counter++;
           } else { thisMessage.close(btn); }
         }, 1000);
-      
+
       this.open = function() {
         updateVisualTextContent();
         formAccess("off");
         overlay.setAttribute("class","overlay");
         overlay.setAttribute("disabled", "");
         alertBox.removeAttribute("hidden");
-        animation.removeAttribute("hidden");
         var animate = document.createElement("DIV");
         animate.setAttribute("class", img + "-" + anim);
         animation.appendChild(animate);
         if (btn) {
           alertBox.setAttribute("role", "alertdialog");
-          continueBtn.innerHTML = "Cancel";
-          continueBtn.removeAttribute("hidden");
-          continueBtn.focus();
+          cancelBtn.removeAttribute("hidden");
+          cancelBtn.focus();
         } else {
           alertBox.setAttribute("role", "alert");
           alertBox.focus();
@@ -265,21 +273,19 @@
 
       this.close = function(button) {
         clearInterval(timedMessage);
-        animation.setAttribute("hidden", "");
+        alertBox.setAttribute("hidden", "");
         if (button) {
-          continueBtn.blur();
-          continueBtn.innerHTML = "OK";
-          setTimeout(function(){
-            continueBtn.focus(); 
-          }, 250);
+          okBox.removeAttribute("hidden");
+          okBtn.focus();
         } else {
           formAccess();
+          okBox.setAttribute("hidden", "");
           animation.removeChild(animation.childNodes[0]);
-          continueBtn.setAttribute("hidden", "");
+          cancelBtn.setAttribute("hidden", "");
+          cancelBtn.removeAttribute("role");
           overlay.removeAttribute("class");
           overlay.removeAttribute("disabled");
           alertBox.removeAttribute("role");
-          alertBox.setAttribute("hidden", "");
           document.querySelector("button").focus();
         }
       };
@@ -295,7 +301,11 @@
 
       function updateLiveRegionAnnounce() {
         var intervals = [0, quarter, thrQrts, time]
-        if (btn) { intervals.shift(); }
+        if (btn) { 
+          intervals.shift(); 
+          intervals.pop();
+        }
+
         intervals.forEach(function(el) {
           if (counter === el) {
             liveReg.innerHTML = vizText.innerText;
