@@ -208,9 +208,11 @@
     <button id="generate">Generate</button>
   </main>
 
+  <!-- The best way to make it cross browser with assitive technology-->
+
   <!-- if no button - must have role=alert and does not need aria-live -->
   <div id="alert-only" class="alert-box" tabindex="0" hidden>
-    <div>Wait Message Example</div>
+    <div id="title" >Wait Message Example</div>
     <div class="animation"></div>
     <div class="visual-text" aria-hidden="true"></div>
     <div class="visually-hidden live-region" role="alert"></div>
@@ -219,13 +221,13 @@
   <!-- if button - it must have role=alertdialog and aria-live -->
   <div id="alert-cancel" class="alert-box" role="alertdialog" tabindex="0" hidden>
     <div>Wait Message Button Example</div>
-    <div class="animation"><span class="visually-hidden">animation</span></div>
+    <div class="animation"></div>
     <div class="visual-text" aria-hidden="true"></div>
-    <div class="visually-hidden live-region" aria-live="polite"></div>
+    <div class="visually-hidden live-region" aria-live="assertive"></div>
     <button id="cancel-btn" class="continue">Cancel</button>
   </div>
 
-  <!-- after cancel button pressed, it should focus to ok button -->
+  <!-- after cancel button pressed, it should focus to next focusable element (ok button) -->
   <div id="alert-ok" class="alert-box" role="alertdialog" tabindex="0" hidden>
     <div>Action complete!</div>
     <button id="ok-btn" class="continue">OK</button>
