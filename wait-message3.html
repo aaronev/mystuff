@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="IE=edge">
+  <title>Wait Message Examples</title>
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0m shrink-to-fit=no">
+  <style>
+    html {
+      background-size: cover;
+      box-sizing: border-box;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      line-height: 1.5;
+      margin: 1rem;
+    }
+
+    :focus {
+      outline: 0;
+      position: relative;
+    }
+
+    :focus:not(body):not(html):before {
+      box-shadow: 0 0 0 4px #fff;
+      bottom: 4px;
+      content: "";
+      left: 4px;
+      position: absolute;
+      right: 4px;
+      top: 4px;
+    }
+
+    :focus:not(body):not(html):before, 
+    select:focus, 
+    input:focus {
+      outline: 4px dotted #6da003;
+    }
+
+    ::-moz-focus-inner {
+      border: 0;
+    }
+
+    .visually-hidden {
+      clip: rect(0.063rem, 0.063rem, 0.063rem, 0.063rem);
+      font-size: 1px;
+      height: .5px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: .5px;
+    }
+
+    .overlay {
+      opacity: .1;
+      background: #fff;
+    }
+
+    .spin-indefinite {
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      border: 10px solid #DC143C;
+      border-radius: 50%;
+      border-bottom-color: rgba(0,0,0,0.34);
+      animation: spin-indefinite 2s linear infinite;
+    }
+
+    .bar-indefinite {
+      width: 50%;
+      height: 20px;
+      background-color: #DC143C;
+      animation: bar-indefinite 1s alternate-reverse infinite;
+    }
+
+    .spin-definite {
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      border: 10px solid rgba(0,0,0,0.34);
+      border-radius: 50%;
+    }
+
+    .bar-definite {
+      width: 0%;
+      height: 20px;
+      background-color: #DC143C;
+    }
+
+    .alert-box {
+      width: 75%;
+      position: fixed;
+      left: 50%;
+      bottom: 50%;
+      margin-left: -37.5%;
+      border: solid black 1px;
+      text-align: center;
+      padding: 2%;
+    }
+
+    .animation, #basic-img {
+      border: solid black .1px;
+      background-color: rgba(0,0,0,0.34);
+      margin: 0 auto;
+    }
+
+    #basic {
+      width: 50%;
+      margin: 0 auto;
+      border: solid black 1px;
+      text-align: center;
+      padding: 2%;
+    }
+
+    @keyframes spin-indefinite {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes bar-indefinite {
+      0% {
+        margin-left: 50%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <main id="overlay">
+    <h1>Wait Message Examples</h1>
+    <h2>Basic</h2>
+    
+    <p id="basic-info">The following is an example of a basic wait message loading spinner.</p>
+    
+    <button>Open</button>
+    <button>Close</button>
+    
+    <div id="basic" role="alert" tabindex="0" aria-describedby="basic-info" hidden>
+      <div id="basic-img">
+        <div class="spin-indefinite" ></div>
+      </div>
+      <div>Loading...</div>
+    </div>
+
+    <h2>Generator</h2>
+    <p>The following is a generator of a barebones wait message example.</p>
+    <fieldset>
+      <legend>Select Image:</legend>
+      <div>
+        <input id="spin" type="radio" name="image" value="spin" checked>
+        <label for="spin">Spinner</label>
+      </div>
+      <div>
+        <input id="bar" type="radio" name="image" value="bar">
+        <label for="bar">Progress Bar</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Select Animation:</legend>
+      <div>
+        <input id="indefinite" type="radio" name="animate" value="indefinite" checked>
+        <label for="indefinite">Indefinite</label>
+      </div>
+      <div>
+        <input id="definite" type="radio" name="animate" value="definite">
+        <label for="definite">Definite</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Select Text:</legend>
+      <div>
+        <input id="timer" type="radio" name="text" value="timer" checked>
+        <label for="timer">Timer</label>
+      </div>
+      <div>
+        <input id="load" type="radio" name="text" value="load">
+        <label for="load">Loading</label>
+      </div>
+      <div>
+        <input id="untimed" type="radio" name="text" value="untimed">
+        <label for="untimed">Please Wait (Untimed)</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Button (Optional):</legend>
+      <div>
+        <input id="yes" type="radio" name="button" value="yes">
+        <label for="yes">Yes</label>
+      </div>
+      <div>
+        <input id="no" type="radio" name="button" value="no" checked>
+        <label for="no">No</label>
+      </div>
+    </fieldset>
+    <button id="generate">Generate</button>
+  </main>
+  
+  <!-- if no button - must have role=alert and does not need aria-live -->
+  <div id="alert-only" class="alert-box" tabindex="0" hidden>
+    <div>Wait Message</div>
+    <div class="animation"></div>
+    <div class="visual-text" aria-hidden="true"></div>
+    <div role="alert">
+      <div id="live-region" class="visually-hidden live-region"></div> 
+    </div>
+  </div>
+    
+  <!-- if button - it must have role=alertdialog and aria-live -->
+  <div id="alert-cancel" class="alert-box" role="alertdialog" tabindex="0" hidden>
+    <div>Wait Message</div>
+    <div class="animation"></div>
+    <div class="visual-text" aria-hidden="true"></div>
+    <div class="visually-hidden live-region" aria-live="assertive"></div>
+    <button id="cancel-btn" class="continue">Cancel</button>
+  </div>
+
+  <!-- after cancel button pressed, it should focus to next focusable element (ok button) -->
+  <div id="alert-ok" class="alert-box" role="alertdialog" tabindex="0" hidden>
+    <div>Action complete!</div>
+    <button id="ok-btn" class="continue">OK</button>
+  </div>
+
+
+  <script>
+    var isFF = typeof InstallTrigger !== 'undefined';
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+    //for basic wait message wth spinner
+    document.querySelector("button").addEventListener("click", function(e){
+      var basicWaitMessage = document.getElementById("basic");
+      basicWaitMessage.removeAttribute("hidden");
+      basicWaitMessage.focus();
+    })
+
+    document.querySelectorAll("button")[1].addEventListener("click", function(){
+      document.getElementById("basic").setAttribute("hidden", "");
+    })
+
+    //for wait message generator
+    var waitMessage;
+
+    Array.prototype.slice.call(document.querySelectorAll(".alert-box"))
+    .forEach(function(alert) {
+      alert.addEventListener("keydown", function(e) {
+        if (e.keyCode == 27) { waitMessage.close(); }
+      });      
+    })
+
+
+    Array.prototype.slice.call(document.querySelectorAll(".continue"))
+    .forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        waitMessage.close();
+      });
+    });
+
+    document.querySelector("#generate").addEventListener("click", function(e) {
+      waitMessage = new AlertWaitMessage(
+        document.querySelector("input[name='image']:checked").value,
+        document.querySelector("input[name='animate']:checked").value,
+        document.querySelector("input[name='text']:checked").value,
+        document.querySelector("input[name='button']:checked").value,
+        10
+        ).open();
+    });
+
+    function AlertWaitMessage(img, anim, txt, btn, time) {
+      var overlay = document.getElementById("overlay");
+      var animation = document.querySelectorAll(".animation");
+      var animations = Array.prototype.slice.call(animation);
+      var liveReg = document.getElementById("live-region");
+      var alrtOnly = document.getElementById("alert-only");
+      var alrtCncl = document.getElementById("alert-cancel");
+      var cnclBtn = document.getElementById("cancel-btn");
+      var alrtOk = document.getElementById("alert-ok");
+      var okBtn = document.getElementById("ok-btn");
+      var quarter = Math.round(time*.25);
+      var half = Math.round(time*.5);
+      var thrQrts = Math.round(time*.75);
+      var hasBtn = (btn === "yes");
+      var thisMessage = this;
+      var counter = 0;
+
+      var timedMessage = setInterval(function() {
+          if (counter <= time) {
+            updateVisualTextContent();
+            announceLiveRegion();
+            updateDefiniteAnimation();
+            counter++;
+          } else { thisMessage.close(hasBtn); }
+        }, 1000);
+
+      this.open = function() {
+        mainAccess("off");
+        overlay.setAttribute("class", "overlay");
+        overlay.setAttribute("disabled", "");
+        updateVisualTextContent();
+        animations.forEach(function(image){
+          var animate = document.createElement("DIV");
+          animate.setAttribute("class", img + "-" + anim);
+          image.appendChild(animate);
+        })
+        if (hasBtn) {
+          alrtCncl.removeAttribute("hidden");
+          cnclBtn.focus();
+        } else { 
+          alrtOnly.removeAttribute("hidden");
+          alrtOnly.focus(); 
+        }
+        return thisMessage;
+      }
+
+      this.close = function(hasButton) {
+        clearInterval(timedMessage);
+        Array.prototype.slice.call(document.querySelectorAll(".alert-box"))
+        .forEach(function(alert) {
+          alert.setAttribute("hidden", "");  
+        });  
+        if (hasButton) {
+          alrtOk.removeAttribute("hidden");
+          okBtn.focus();
+        } else {
+          animations.forEach(function(image){
+            image.innerHTML = '';
+          })
+          overlay.removeAttribute("disabled");
+          overlay.removeAttribute("class");
+          mainAccess();
+          document.getElementById("generate").focus();
+        }
+      };
+      
+      function mainAccess(off) {
+        Array.prototype.slice.call(overlay.children)
+        .forEach(function(el){
+          (off)
+            ? el.setAttribute("disabled", "")
+            : el.removeAttribute("disabled");
+        });
+      };
+
+      function updateVisualTextContent() {
+        var forliveReg="";
+        Array.prototype.slice.call(document.querySelectorAll(".visual-text"))
+        .forEach(function(vizText){
+          var seconds = (time - counter > 1)
+            ? " seconds remaining"
+            : " second remaining";
+          if (counter >= time) {
+            forLiveReg = vizText.innerHTML = "Action complete!";
+          } else if (txt === "load") {
+            forLiveReg = vizText.innerHTML = Math.round((counter/time)*100)
+            + "% loading...";
+          } else if (txt === "timer") {
+            forLiveReg = vizText.innerHTML = (time-counter) + seconds;
+          } else {
+            forLiveReg = vizText.innerHTML = "Processing...";
+          } 
+        });
+        return forLiveReg;
+      };
+
+      function announceLiveRegion() {
+        var intervals = [0, quarter, thrQrts, time];
+
+        if (hasBtn) { 
+          intervals.shift(); 
+          intervals.pop();
+        }
+
+        Array.prototype.slice.call(document.querySelectorAll(".live-region"))
+        .forEach(function(announce){
+          intervals.forEach(function(el) {
+            if (counter === el) {
+              announce.innerHTML = updateVisualTextContent();
+              if (isIE) { announce.innerHTML=""; }
+              setTimeout(function() {
+                announce.innerHTML = "";
+              }, 1000);
+            }
+          });
+        });
+      }
+        
+      function updateDefiniteAnimation() { 
+        var spinners = Array.prototype.slice.call(document.querySelectorAll(".spin-definite"));
+        var bars = Array.prototype.slice.call(document.querySelectorAll(".bar-definite"));
+        if (bars[0]) {
+          bars.forEach(function(bar){
+            bar.style.width = (counter/time)*100 + "%";
+          })
+        } else if (spinners[0]) {
+          spinners.forEach(function(spin){
+            if (counter === quarter) {
+              spin.style.borderLeftColor = "#DC143C";
+            } else if (counter === half) {
+              spin.style.borderTopColor = "#DC143C";
+            } else if (counter === thrQrts) {
+              spin.style.borderRightColor = "#DC143C";
+            } else if (counter >= time) {
+              spin.style.borderBottomColor = "#DC143C";
+            }
+          })
+        } 
+      }
+    }
+
+  </script>
+</body>
+</html>
