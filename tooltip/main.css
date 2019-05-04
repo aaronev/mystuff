@@ -1,0 +1,11 @@
+[role=tooltip] {
+  opacity: 0;
+}
+
+button:hover ~ [role=tooltip] {
+  opacity: 1;
+}
+
+button:focus ~ [role=tooltip] {
+  opacity: 1;
+}

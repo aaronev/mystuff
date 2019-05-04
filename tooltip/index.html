@@ -2,16 +2,16 @@
 <html>
 <head>
   <title>Accessible Tooltip</title>
-  <link src="./main.css">
+  <link rel="stylesheet" type="text/css" href="./main.css">
 </head>
 <body>
   <main>
   <h1>Accessible Tooltip Button Example</h1>
   <div class="tltp-container">
-    <span aria-hidden="true">Continue to next page</span>
     <button aria-describedby="nxt-pg-tltp">Next Page</button>
+    <span role="tooltip">Continue to next page</span>
   </div>
   </main>
-  <script type="text/javascript" src="./index.js"></script>
+  <script type="text/javascript" src="index.js"></script>
 </body>
 </html>
