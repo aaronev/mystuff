@@ -9,25 +9,22 @@
 Array.prototype.slice.call(document.querySelectorAll('button')).forEach(function(el){
   var tooltip = el.nextElementSibling;
 
+  document.onmouseover = function(e) {
+    document.elementFromPoint(e.clientX, e.clientY).addEventListener('keydown', escDismissTooltip);
+  };
+
   el.addEventListener('keydown', escDismissTooltip);
   el.addEventListener('blur', resetTooltip);
   el.addEventListener('mouseout', resetTooltip);
-  document.onmouseover = function(e) {
-    document.elementFromPoint(e.clientX, e.clientY).parentNode.addEventListener('keydown', escDismissTooltip)
+
+  function escDismissTooltip(e) {  // overwrites css
+    if (e.key.match('Esc')) { tooltip.style.opacity = '0'; }
   };
 
-  //this will overwrite css
-  function escDismissTooltip(e) {
-    if (e.key.match('Esc')) { 
-      tooltip.style.opacity = '0';
-    }
-  };
-
-  //reset to css default
+  // reset to css default
   function resetTooltip() { 
     tooltip.style.opacity = '';
   };
-
 });
 
 // (function() { //track mouse 
