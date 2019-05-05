@@ -3,9 +3,22 @@
 }
 
 button:hover ~ [role=tooltip] {
+  /* 
+    transition also works 
+    on mouse out check js out
+  */
+
+  transition-delay: 4s;
   opacity: 1;
 }
 
 button:focus ~ [role=tooltip] {
+
+  /* 
+    transition also works 
+    on blur so check js out
+  */
+
+  transition-delay: 4s;
   opacity: 1;
 }
